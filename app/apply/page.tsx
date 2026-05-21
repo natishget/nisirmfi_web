@@ -12,17 +12,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/app/components/ui/form";
-import { Input } from "@/app/components/ui/input";
-import { Textarea } from "@/app/components/ui/textarea";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select";
-import { useToast } from "@/app/hooks/use-toast";
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const step1Schema = z.object({
   firstName: z.string().min(2),
@@ -47,8 +47,8 @@ const step3Schema = z.object({
   businessName: z.string().optional().or(z.literal("")),
   businessType: z.string().optional().or(z.literal("")),
   collateral: z.string().optional().or(z.literal("")),
-  declaration: z.literal(true, {
-    errorMap: () => ({ message: "You must agree to the declaration" }),
+  declaration: z.boolean().refine((value) => value === true, {
+    message: "You must agree to the declaration",
   }),
 });
 

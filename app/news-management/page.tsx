@@ -336,50 +336,7 @@ export default function NewsManagementPage() {
 
   return (
     <div className="overflow-x-hidden bg-[#f0f3fc]">
-      <section className="relative overflow-hidden hero-gradient noise-overlay">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_28%)]" />
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 sm:py-24 lg:py-28">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: easeOut }}
-            className="max-w-3xl"
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/75 backdrop-blur-sm">
-              <Megaphone className="h-4 w-4" />
-              News management
-            </div>
-            <h1 className="display-text mt-5 text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05]">
-              Manage every news update from one place.
-            </h1>
-            <p className="mt-5 max-w-2xl text-sm sm:text-base leading-7 text-white/68">
-              Review all published news, keep drafts organized, schedule future
-              stories, and create new posts with demo content that mimics the
-              admin workflow.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                type="button"
-                onClick={openCreate}
-                className="bg-white text-[#22348A] hover:bg-white/95"
-              >
-                <Plus className="h-4 w-4" />
-                Create news
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="border-white/20 bg-white/8 text-white hover:bg-white/12"
-                onClick={() => setSearch("")}
-              >
-                <Filter className="h-4 w-4" />
-                Reset filters
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
+      <section className="py-22 bg-[#22348A]"></section>
       <section className="relative -mt-10 pb-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 space-y-6">
           <div className="grid gap-4 md:grid-cols-4">

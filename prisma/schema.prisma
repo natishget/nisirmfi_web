@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email    String @unique
+  password String
+  fullName String
+
+  @@map("users")
+}
+
+model News {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String
+  category      String
+  status        NewsStatus @default(DRAFT)
+  summary       String
+  publishedDate DateTime
+  readTime      Int
+  imageUrl      String
+  isFeatured    Boolean    @default(false)
+
+  @@map("news")
+}
+
+model Career {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title           String
+  department      String
+  location        String
+  type            String
+  purpose         String
+  responsibilities String[]
+  qualification   String[]
+  salary          String
+  benefits        String[]
+  postDate        DateTime
+  endDate         DateTime
+
+  @@map("careers")
+}

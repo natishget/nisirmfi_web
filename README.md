@@ -1,4 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) corporate website built with the App Router.
+
+## Database Setup
+
+This project uses Prisma ORM with PostgreSQL.
+
+Required environment variables are documented in [`.env.example`](.env.example).
+
+```bash
+pnpm install
+pnpm prisma:generate
+pnpm prisma:migrate
+pnpm dev
+```
+
+Key Prisma files:
+
+- [prisma/schema.prisma](prisma/schema.prisma)
+- [prisma.config.ts](prisma.config.ts)
+- [prisma/migrations/20260521150000_initial/migration.sql](prisma/migrations/20260521150000_initial/migration.sql)
+
+Available API routes:
+
+- `/api/users`
+- `/api/news`
+- `/api/careers`
 
 ## Getting Started
 
@@ -17,8 +42,6 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 

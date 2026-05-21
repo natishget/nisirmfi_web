@@ -204,7 +204,7 @@ export default function Careers() {
                     </div>
                   </div>
                   <Link
-                    href={`/careers/${job.slug}`}
+                    href={`/careers/career-detail/?${job.slug}`}
                     data-testid={`link-view-job-${i}`}
                   >
                     <motion.div
