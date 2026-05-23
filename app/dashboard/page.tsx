@@ -42,7 +42,7 @@ const managementCards = [
   },
 ];
 
-const cardVariants = {
+const cardVariants: any = {
   hidden: { opacity: 0, y: 28 },
   visible: (index: number) => ({
     opacity: 1,
