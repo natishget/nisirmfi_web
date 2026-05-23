@@ -8,7 +8,7 @@ import { userCreateSchema } from "@/lib/validators/user";
 
 export async function GET(request: NextRequest) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
 
     const { page, limit } = parsePagination(request.nextUrl);
     const search = request.nextUrl.searchParams.get("search") ?? undefined;
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
 
     const body = userCreateSchema.parse(await request.json());
     const user = await createUser(body);

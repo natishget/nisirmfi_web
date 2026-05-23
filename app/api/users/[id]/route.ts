@@ -15,7 +15,7 @@ type RouteContext = {
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(_request);
+    await requireAdminAccess(_request);
     const { id } = await context.params;
     const user = await getUserById(id);
 
@@ -27,7 +27,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
     const body = userUpdateSchema.parse(await request.json());
     const user = await updateUser(id, body);
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
     await deleteUser(id);
 
