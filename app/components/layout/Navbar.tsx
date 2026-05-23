@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,7 +27,7 @@ interface NavItem {
   children?: NavChild[];
 }
 
-const navLinks: NavItem[] = [
+const baseNavLinks: NavItem[] = [
   { label: "Home", href: "/" },
   {
     label: "About",
@@ -75,6 +76,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -84,9 +86,48 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/auth/me", {
+          credentials: "same-origin",
+        });
+
+        if (cancelled) {
+          return;
+        }
+
+        setIsAuthenticated(response.ok);
+      } catch {
+        if (!cancelled) {
+          setIsAuthenticated(false);
+        }
+      }
+    };
+
+    void checkSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     setIsOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
+
+  const navLinks = useMemo(() => {
+    if (isAuthenticated !== true) {
+      return baseNavLinks;
+    }
+
+    const links = [...baseNavLinks];
+    links.splice(5, 0, { label: "Dashboard", href: "/dashboard" });
+
+    return links;
+  }, [isAuthenticated]);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname?.startsWith(href));
@@ -100,10 +141,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white shadow-sm border-b border-gray-100"
-          : "bg-transparent"
+      className={`fixed left-0 right-0 z-50 transition-all duration-50 bg-white border-b border-gray-100 ${
+        scrolled ? " shadow-sm top-0" : " w-[80%] mx-auto rounded-full top-1"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
@@ -115,18 +154,18 @@ export default function Navbar() {
               data-testid="link-logo"
             >
               <div
-                className={`w-7  flex items-center justify-center transition-colors ${scrolled ? "bg-white" : ""}`}
+                className={`w-7  flex items-center justify-center transition-colors bg-white `}
               >
                 <img src="../Logo only.png" alt="Nisir MFI logo" />
               </div>
               <div>
                 <div
-                  className={`font-bold text-base leading-tight tracking-tight transition-colors ${scrolled ? "text-[#22348A]" : "text-white"}`}
+                  className={`font-bold text-base leading-tight tracking-tight transition-colors text-[#22348A] `}
                 >
                   Nisir MFI
                 </div>
                 <div
-                  className={`text-[10px] leading-tight tracking-wider uppercase transition-colors ${scrolled ? "text-gray-400" : "text-white/60"}`}
+                  className={`text-[10px] leading-tight tracking-wider uppercase transition-colors text-gray-400 `}
                 >
                   Microfinance Institution S.C.
                 </div>
@@ -149,10 +188,10 @@ export default function Navbar() {
                       isDropdownActive(link) || openDropdown === link.label
                         ? scrolled
                           ? "text-[#22348A] bg-[#f0f3fc]"
-                          : "text-white bg-white/15"
+                          : "text-[#22348A] bg-[#f0f3fc]"
                         : scrolled
                           ? "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
-                          : "text-white/85 hover:text-white hover:bg-white/10"
+                          : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
                     }`}
                   >
                     {link.label}
@@ -214,10 +253,10 @@ export default function Navbar() {
                       isActive(link.href)
                         ? scrolled
                           ? "text-[#22348A] bg-[#f0f3fc]"
-                          : "text-white bg-white/15"
+                          : "text-[#22348A] bg-[#f0f3fc"
                         : scrolled
                           ? "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
-                          : "text-white/85 hover:text-white hover:bg-white/10"
+                          : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
                     }`}
                   >
                     {link.label}
@@ -235,7 +274,7 @@ export default function Navbar() {
                 className={`text-sm font-semibold px-5 py-2.5 rounded transition-all cursor-pointer ${
                   scrolled
                     ? "bg-[#22348A] text-white hover:bg-[#162260]"
-                    : "bg-white text-[#22348A] hover:bg-white/90"
+                    : "bg-[#22348A] text-white hover:bg-[#162260]"
                 }`}
               >
                 Apply for a Loan
