@@ -7,7 +7,7 @@ import {
   getCareerById,
   updateCareer,
 } from "@/lib/services/career.service";
-import { careerUpdateSchema } from "@/lib/validators/career";
+import { careerIdSchema, careerUpdateSchema } from "@/lib/validators/career";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -16,7 +16,8 @@ type RouteContext = {
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
-    const career = await getCareerById(id);
+    careerIdSchema.parse(id);
+    const career = await getCareerById(id, { activeOnly: true });
 
     return NextResponse.json({ data: career });
   } catch (error) {
@@ -26,8 +27,9 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
+    careerIdSchema.parse(id);
     const body = careerUpdateSchema.parse(await request.json());
     const career = await updateCareer(id, body);
 
@@ -39,8 +41,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
+    careerIdSchema.parse(id);
     await deleteCareer(id);
 
     return new NextResponse(null, { status: 204 });

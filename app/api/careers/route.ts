@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
       search,
       location,
       department,
+      activeOnly: true,
     });
 
     return NextResponse.json({
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const body = careerCreateSchema.parse(await request.json());
     const career = await createCareer(body);
 

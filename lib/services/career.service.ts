@@ -28,42 +28,64 @@ export type CareerPayload = Prisma.CareerGetPayload<{
   select: typeof careerSelect;
 }>;
 
-export async function listCareers({
-  page,
-  limit,
-  search,
-  location,
-  department,
-}: {
+type ListCareersOptions = {
   page: number;
   limit: number;
   search?: string;
   location?: string;
   department?: string;
-}) {
-  const where: Prisma.CareerWhereInput = {
+  activeOnly?: boolean;
+};
+
+type GetCareerOptions = {
+  activeOnly?: boolean;
+};
+
+function buildCareerWhere({
+  search,
+  location,
+  department,
+  activeOnly = false,
+}: Pick<
+  ListCareersOptions,
+  "search" | "location" | "department" | "activeOnly"
+>) {
+  const now = new Date();
+
+  return {
+    ...(activeOnly
+      ? {
+          postDate: { lte: now },
+          endDate: { gte: now },
+        }
+      : {}),
     ...(location
-      ? { location: { contains: location, mode: "insensitive" } }
+      ? { location: { contains: location, mode: "insensitive" as const } }
       : {}),
     ...(department
-      ? { department: { contains: department, mode: "insensitive" } }
+      ? { department: { contains: department, mode: "insensitive" as const } }
       : {}),
     ...(search
       ? {
           OR: [
-            { title: { contains: search, mode: "insensitive" } },
-            { purpose: { contains: search, mode: "insensitive" } },
-            { department: { contains: search, mode: "insensitive" } },
+            { title: { contains: search, mode: "insensitive" as const } },
+            { purpose: { contains: search, mode: "insensitive" as const } },
+            { department: { contains: search, mode: "insensitive" as const } },
+            { location: { contains: search, mode: "insensitive" as const } },
           ],
         }
       : {}),
-  };
+  } satisfies Prisma.CareerWhereInput;
+}
+
+export async function listCareers(options: ListCareersOptions) {
+  const where = buildCareerWhere(options);
 
   const [items, total] = await prisma.$transaction([
     prisma.career.findMany({
       where,
-      skip: (page - 1) * limit,
-      take: limit,
+      skip: (options.page - 1) * options.limit,
+      take: options.limit,
       orderBy: { postDate: "desc" },
       select: careerSelect,
     }),
@@ -73,9 +95,20 @@ export async function listCareers({
   return { items, total };
 }
 
-export async function getCareerById(id: string) {
-  const career = await prisma.career.findUnique({
-    where: { id },
+export async function getCareerById(
+  id: string,
+  options: GetCareerOptions = {},
+) {
+  const career = await prisma.career.findFirst({
+    where: {
+      id,
+      ...(options.activeOnly
+        ? {
+            postDate: { lte: new Date() },
+            endDate: { gte: new Date() },
+          }
+        : {}),
+    },
     select: careerSelect,
   });
 
