@@ -1,14 +1,12 @@
 "use client";
-import AdminLoginForm from "@/components/ui/adminLoginForm";
 
-import React, { useEffect } from "react";
+import AdminLoginForm from "@/components/ui/adminLoginForm";
 import redBigWave from "@/../public/loginIcons/redBigWave.svg";
 import blueCircle from "@/../public/loginIcons/blueCircle.svg";
 import bottomBlue from "@/../public/loginIcons/bottomBlue.svg";
 import topBlue from "@/../public/loginIcons/topBlue.svg";
 import lemonTwo from "@/../public/loginIcons/lemonTwo.svg";
 import smallBlue from "@/../public/loginIcons/smallBlue.svg";
-import Loading from "@/../public/loginIcons/loading.png";
 
 import Image from "next/image";
 
@@ -40,7 +38,7 @@ const Page = () => {
       <div className="absolute bottom-1/4 right-160 hidden md:block">
         <Image src={smallBlue} alt="Small Blue" className="w-[200px]" />
       </div>
-      <AdminLoginForm />;
+      <AdminLoginForm />
     </div>
   );
 };

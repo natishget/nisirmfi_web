@@ -1,113 +1,110 @@
 "use client";
 
-import React, { useEffect } from "react";
-import redBigWave from "@/../public/loginIcons/redBigWave.svg";
-import blueCircle from "@/../public/loginIcons/blueCircle.svg";
-import bottomBlue from "@/../public/loginIcons/bottomBlue.svg";
-import topBlue from "@/../public/loginIcons/topBlue.svg";
-import lemonTwo from "@/../public/loginIcons/lemonTwo.svg";
-import smallBlue from "@/../public/loginIcons/smallBlue.svg";
-import Loading from "@/../public/loginIcons/loading.png";
+import { useState } from "react";
 
-import Image from "next/image";
-
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
-// type LoginFormData = z.infer<typeof loginAdminSchema>;
+import { authLoginSchema, type AuthLoginInput } from "@/lib/validators/auth";
 
-const AdminLoginForm = () => {
-  //   const { user, loading, initialized } = useSelector(
-  //     (state: RootState) => state.api,
-  //   );
+type LoginFormValues = AuthLoginInput;
 
-  //   const router = useRouter();
-  //   const dispatch = useDispatch<AppDispatch>();
-  //   const [isLoading, setIsLoading] = React.useState(false);
-  //   const [error, setError] = React.useState<string | null>(null);
+export default function AdminLoginForm() {
+  const router = useRouter();
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  //   if (initialized && user) {
-  //     router.push("/users");
-  //   }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(authLoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  //   const {
-  //     register,
-  //     handleSubmit,
-  //     formState: { errors },
-  //   } = useForm<LoginFormData>({
-  //     resolver: zodResolver(loginAdminSchema),
-  //   });
+  const onSubmit = async (data: LoginFormValues) => {
+    setSubmitError(null);
 
-  const onSubmit = async () => {
-    //     setIsLoading(true);
-    //     try {
-    //       const response = await dispatch(adminLoginAsync(data)).unwrap();
-    //       console.log("Admin login successful:", response);
-    //       router.push("/users");
-    //     } catch (error: any) {
-    //       setError(error);
-    //     } finally {
-    //       setIsLoading(false);
-    //     }
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const payload = (await response.json()) as {
+      error?: string;
+      message?: string;
+    };
+
+    if (!response.ok) {
+      setSubmitError(payload.error ?? "Unable to sign in");
+      return;
+    }
+
+    router.replace("/dashboard");
+    router.refresh();
   };
-  if (true) {
-    return (
-      
-
-        <form
-          //   onSubmit={}
-          className="text-white pt-10 pb-10 md:px-18 px-4 border-2 border-gray-300 rounded-4xl md:w-[550px] md:h-[550px] w-[90%] h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/5 backdrop-blur-sm"
-        >
-          <h3 className="font-semibold text-xl mb-3">Maker</h3>
-          <h1 className="font-semibold text-3xl mb-5">Login</h1>
-          <div className="flex flex-col gap-1 mb-3">
-            <label htmlFor="username" className="">
-              Username
-            </label>
-            <input
-              type="text"
-              //   {...register("username")}
-              placeholder="Username"
-              className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
-            />
-            {/* <p className="text-red-500">{errors.username?.message}</p> */}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              //   {...register("password")}
-              placeholder="********"
-              className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
-            />
-            {/* <p className="text-red-500">{errors.password?.message}</p> */}
-          </div>
-
-          <button className="text-xs">Forget password?</button>
-          <br />
-
-          <button className="w-full bg-red-800 py-2 mt-10  flex items-center justify-center tracking-wide">
-            {/* {isLoading ? (
-              <Image src={Loading} alt="" className="animate-spin w-5 " />
-            ) : (
-              "Sign In"
-            )} */}
-            Sign In
-          </button>
-          {/* <p className="text-red-500 text-center mt-2">{error}</p> */}
-        </form>
-      
-    );
-  }
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-[rgb(15,12,41)] from-0% via-[rgb(48,43,99)] via-50% to-[rgb(36,36,62)] to-100%">
-      <Image src={Loading} alt="Loading" className="animate-spin w-10" />
-    </div>
-  );
-};
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="text-white pt-10 pb-10 md:px-18 px-4 border-2 border-gray-300 rounded-4xl md:w-[550px] md:h-[550px] w-[90%] h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/5 backdrop-blur-sm"
+    >
+      <h3 className="font-semibold text-xl mb-3">Maker</h3>
+      <h1 className="font-semibold text-3xl mb-5">Login</h1>
 
-export default AdminLoginForm;
+      <div className="flex flex-col gap-1 mb-3">
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          {...register("email")}
+          placeholder="name@company.com"
+          autoComplete="email"
+          className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
+        />
+        {errors.email ? (
+          <p className="text-red-300 text-sm">{errors.email.message}</p>
+        ) : null}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          {...register("password")}
+          placeholder="********"
+          autoComplete="current-password"
+          className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
+        />
+        {errors.password ? (
+          <p className="text-red-300 text-sm">{errors.password.message}</p>
+        ) : null}
+      </div>
+
+      <button type="button" className="text-xs mt-3">
+        Forget password?
+      </button>
+      <br />
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-red-800 py-2 mt-10 flex items-center justify-center tracking-wide disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {isSubmitting ? "Signing in..." : "Sign In"}
+      </button>
+
+      {submitError ? (
+        <p className="text-red-300 text-center mt-3 text-sm">{submitError}</p>
+      ) : null}
+    </form>
+  );
+}
