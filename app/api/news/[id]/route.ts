@@ -26,7 +26,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
     const body = newsUpdateSchema.parse(await request.json());
     const news = await updateNews(id, body);
@@ -39,7 +39,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const { id } = await context.params;
     await deleteNews(id);
 

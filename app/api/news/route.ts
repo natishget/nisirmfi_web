@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    requireAdminAccess(request);
+    await requireAdminAccess(request);
     const body = newsCreateSchema.parse(await request.json());
     const news = await createNews(body);
 

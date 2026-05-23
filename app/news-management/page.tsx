@@ -336,7 +336,18 @@ export default function NewsManagementPage() {
 
   return (
     <div className="overflow-x-hidden bg-[#f0f3fc]">
-      <section className="py-22 bg-[#22348A]"></section>
+      <section className="py-26 bg-[#22348A]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <span className="block w-8 h-px bg-white/60 mb-5" />
+          <h1 className="display-text text-3xl sm:text-4xl text-white">
+            News Management
+          </h1>
+          <p className="mt-3 max-w-2xl text-white/70">
+            Manage News postings, Edit and Delete existing news, and create a
+            featured news posts.pnpm dev --host
+          </p>
+        </div>
+      </section>
       <section className="relative -mt-10 pb-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 space-y-6">
           <div className="grid gap-4 md:grid-cols-4">
