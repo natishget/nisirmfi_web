@@ -116,7 +116,7 @@ export default function UserManagementClient({
     }
 
     return users.filter((user) =>
-      [user.fullName, user.email].join(" ").toLowerCase().includes(term),
+      `${user.fullName} ${user.email}`.toLowerCase().includes(term),
     );
   }, [search, users]);
 

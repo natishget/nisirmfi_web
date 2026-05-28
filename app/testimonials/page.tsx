@@ -94,6 +94,7 @@ const stats = [
 ];
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+const stars = [0, 1, 2, 3, 4] as const;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -191,7 +192,7 @@ export default function Testimonials() {
             {/* Content side */}
             <div className="lg:col-span-3 bg-[#22348A] p-10 md:p-14 flex flex-col justify-center">
               <div className="flex gap-0.5 mb-6">
-                {[...Array(5)].map((_, i) => (
+                {stars.map((i) => (
                   <Star
                     key={i}
                     className="w-4 h-4 fill-amber-400 text-amber-400"
@@ -247,7 +248,7 @@ export default function Testimonials() {
               >
                 <div>
                   <div className="flex gap-0.5 mb-3">
-                    {[...Array(5)].map((_, j) => (
+                    {stars.map((j) => (
                       <Star
                         key={j}
                         className="w-3.5 h-3.5 fill-amber-400 text-amber-400"

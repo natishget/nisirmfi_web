@@ -242,11 +242,12 @@ function ImpactStat({
 /* ─── Animation variants ───────────────────────────────────────── */
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+const slideInUp = {
+  hidden: { opacity: 0, y: 28, x: -16 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
+    x: 0,
     transition: { delay: i * 0.1, duration: 0.6, ease: easeOut },
   }),
 };
@@ -490,7 +491,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={fadeUp}
+            variants={slideInUp}
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-16"
           >
             <div>
@@ -510,8 +511,8 @@ export default function Home() {
             {services.map((svc, i) => (
               <motion.div
                 key={svc.title}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -36 : 36, y: 18 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
                   delay: i * 0.15,
@@ -575,7 +576,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={fadeUp}
+            variants={slideInUp}
             className="mb-14"
           >
             <span className="divider-accent mb-5 block" />
@@ -588,8 +589,8 @@ export default function Home() {
             {principles.map((p, i) => (
               <motion.div
                 key={p.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -28 : 28, y: 16 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 whileHover={{ backgroundColor: "#f8f9fe" }}
@@ -633,7 +634,8 @@ export default function Home() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeUp}
+              variants={slideInUp}
+              className=""
             >
               <span className="block w-8 h-px bg-[#BCBDC1] mb-6" />
               <h2 className="display-text text-white text-3xl sm:text-4xl mb-5">
@@ -658,8 +660,8 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 30, y: 12 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: easeOut }}
               className="grid grid-cols-2 gap-px bg-white/8 rounded-2xl overflow-hidden border border-white/10"
@@ -682,7 +684,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={fadeUp}
+            variants={slideInUp}
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-14"
           >
             <div>
@@ -705,8 +707,8 @@ export default function Home() {
             {testimonials.map((t, i) => (
               <motion.div
                 key={t.name}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -32 : 32, y: 18 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
                   delay: i * 0.12,
@@ -763,7 +765,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={fadeUp}
+            variants={slideInUp}
             className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10"
           >
             <div className="max-w-xl">

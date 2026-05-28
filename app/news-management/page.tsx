@@ -344,7 +344,7 @@ export default function NewsManagementPage() {
           </h1>
           <p className="mt-3 max-w-2xl text-white/70">
             Manage News postings, Edit and Delete existing news, and create a
-            featured news posts.pnpm dev --host
+            featured news posts.
           </p>
         </div>
       </section>

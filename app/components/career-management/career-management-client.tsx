@@ -81,10 +81,14 @@ const managementFormSchema = z
     postDate: z.string().min(1, "Post date is required"),
     endDate: z.string().min(1, "End date is required"),
   })
-  .refine((value) => new Date(value.endDate) >= new Date(value.postDate), {
-    path: ["endDate"],
-    message: "End date must be on or after post date",
-  });
+  .refine(
+    (value) =>
+      new Date(value.endDate).getTime() >= new Date(value.postDate).getTime(),
+    {
+      path: ["endDate"],
+      message: "End date must be on or after post date",
+    },
+  );
 
 type ManagementFormValues = z.infer<typeof managementFormSchema>;
 
@@ -153,16 +157,15 @@ function toPayload(values: ManagementFormValues) {
   };
 }
 
-function getStatus(career: CareerRecord) {
-  const now = new Date();
-  const start = new Date(career.postDate);
-  const end = new Date(career.endDate);
+function getStatus(career: CareerRecord, nowTime: number) {
+  const start = new Date(career.postDate).getTime();
+  const end = new Date(career.endDate).getTime();
 
-  if (end < now) {
+  if (end < nowTime) {
     return "Expired";
   }
 
-  if (start > now) {
+  if (start > nowTime) {
     return "Upcoming";
   }
 
@@ -174,6 +177,7 @@ export default function CareerManagementClient({
 }: {
   initialCareers: CareerRecord[];
 }) {
+  const nowTime = Date.now();
   const router = useRouter();
   const [careers, setCareers] = useState(initialCareers);
   const [search, setSearch] = useState("");
@@ -210,37 +214,37 @@ export default function CareerManagementClient({
     const term = search.trim().toLowerCase();
 
     return careers.filter((career) => {
-      const matchesSearch =
-        !term ||
-        [
-          career.title,
-          career.department,
-          career.location,
-          career.type,
-          career.purpose,
-          career.salary,
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(term);
-
       const matchesDepartment =
         departmentFilter === "All" || career.department === departmentFilter;
+
+      if (!matchesDepartment) {
+        return false;
+      }
+
+      const matchesSearch =
+        !term ||
+        `${career.title} ${career.department} ${career.location} ${career.type} ${career.purpose} ${career.salary}`
+          .toLowerCase()
+          .includes(term);
 
       return matchesSearch && matchesDepartment;
     });
   }, [careers, departmentFilter, search]);
 
   const stats = useMemo(() => {
-    const now = new Date();
+    const nowTime = Date.now();
+    let active = 0;
+    let expired = 0;
 
-    return {
-      total: careers.length,
-      active: careers.filter((career) => new Date(career.endDate) >= now)
-        .length,
-      expired: careers.filter((career) => new Date(career.endDate) < now)
-        .length,
-    };
+    for (const career of careers) {
+      if (new Date(career.endDate).getTime() >= nowTime) {
+        active += 1;
+      } else {
+        expired += 1;
+      }
+    }
+
+    return { total: careers.length, active, expired };
   }, [careers]);
 
   const openCreate = () => {
@@ -453,7 +457,7 @@ export default function CareerManagementClient({
                     </TableRow>
                   ) : (
                     filteredCareers.map((career) => {
-                      const status = getStatus(career);
+                      const status = getStatus(career, nowTime);
 
                       return (
                         <TableRow key={career.id}>

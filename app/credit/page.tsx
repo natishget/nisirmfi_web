@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
@@ -15,7 +14,7 @@ const IMG = {
 
 const products = [
   {
-    title: "Business Loan",
+    title: "Small and Meddium Enterprise (SME)",
     tagline: "For established and growing enterprises",
     img: IMG.biz,
     amount: "ETB 10,000 – 2,000,000",
@@ -29,7 +28,7 @@ const products = [
     ],
   },
   {
-    title: "Agriculture Loan",
+    title: "Micro Business Loan",
     tagline: "Seasonal financing for Ethiopian farmers",
     img: IMG.agri,
     amount: "ETB 5,000 – 500,000",
@@ -43,7 +42,7 @@ const products = [
     ],
   },
   {
-    title: "Micro-Enterprise Loan",
+    title: "Car Loan",
     tagline: "Quick capital for small traders",
     img: IMG.micro,
     amount: "ETB 2,000 – 150,000",
@@ -57,7 +56,49 @@ const products = [
     ],
   },
   {
-    title: "Emergency Loan",
+    title: "Bridge Loan",
+    tagline: "When time is critical",
+    img: IMG.emergency,
+    amount: "ETB 1,000 – 50,000",
+    term: "1 – 6 months",
+    desc: "Rapid-access credit for existing customers facing urgent personal or business needs.",
+    features: [
+      "Same-day decision",
+      "Priority for existing customers",
+      "Minimal requirements",
+      "Fast disbursement",
+    ],
+  },
+  {
+    title: "Enterpreneurship Loan",
+    tagline: "When time is critical",
+    img: IMG.emergency,
+    amount: "ETB 1,000 – 50,000",
+    term: "1 – 6 months",
+    desc: "Rapid-access credit for existing customers facing urgent personal or business needs.",
+    features: [
+      "Same-day decision",
+      "Priority for existing customers",
+      "Minimal requirements",
+      "Fast disbursement",
+    ],
+  },
+  {
+    title: "Housing Loan",
+    tagline: "When time is critical",
+    img: IMG.emergency,
+    amount: "ETB 1,000 – 50,000",
+    term: "1 – 6 months",
+    desc: "Rapid-access credit for existing customers facing urgent personal or business needs.",
+    features: [
+      "Same-day decision",
+      "Priority for existing customers",
+      "Minimal requirements",
+      "Fast disbursement",
+    ],
+  },
+  {
+    title: "Consumption Loan",
     tagline: "When time is critical",
     img: IMG.emergency,
     amount: "ETB 1,000 – 50,000",
@@ -129,10 +170,7 @@ export default function Credit() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a52] via-[#0d1a52]/65 to-[#22348A]/30" />
         </div>
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div>
             <span className="block w-8 h-px bg-[#BCBDC1] mb-6" />
             <h1 className="display-text text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-5">
               Credit Services
@@ -143,40 +181,27 @@ export default function Credit() {
               world.
             </p>
             <Link href="/apply">
-              <motion.div
-                whileHover={{ scale: 1.04 }}
-                className="inline-flex items-center gap-2 bg-white text-[#22348A] text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer w-fit"
-              >
+              <div className="inline-flex items-center gap-2 bg-white text-[#22348A] text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer w-fit">
                 Apply for a Loan <ArrowRight className="w-4 h-4" />
-              </motion.div>
+              </div>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Loan Products */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="mb-14"
-          >
+          <div className="mb-14">
             <span className="divider-accent mb-5 block" />
             <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl">
               Loan Products
             </h2>
-          </motion.div>
+          </div>
           <div className="flex flex-col gap-6">
             {products.map((p, i) => (
-              <motion.div
+              <div
                 key={p.title}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6, ease: easeOut }}
                 className="group grid lg:grid-cols-5 gap-0 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-500"
               >
                 {/* Left image + text */}
@@ -228,15 +253,12 @@ export default function Credit() {
                     ))}
                   </div>
                   <Link href="/apply">
-                    <motion.div
-                      whileHover={{ x: 4 }}
-                      className="inline-flex items-center gap-2 bg-[#22348A] text-white text-sm font-bold px-5 py-2.5 rounded-full cursor-pointer hover:bg-[#162260] transition-colors w-fit"
-                    >
+                    <div className="inline-flex items-center gap-2 bg-[#22348A] text-white text-sm font-bold px-5 py-2.5 rounded-full cursor-pointer hover:bg-[#162260] transition-colors w-fit">
                       Apply Now <ArrowRight className="w-4 h-4" />
-                    </motion.div>
+                    </div>
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -245,30 +267,15 @@ export default function Credit() {
       {/* How It Works */}
       <section className="py-24 bg-[#f0f3fc]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="mb-14"
-          >
+          <div className="mb-14">
             <span className="divider-accent mb-5 block" />
             <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl">
               How it works
             </h2>
-          </motion.div>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
             {steps.map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                whileHover={{ backgroundColor: "#f8f9fe" }}
-                className="bg-white p-8 transition-colors"
-              >
+              <div key={s.n} className="bg-white p-8 transition-colors">
                 <div className="text-3xl font-bold text-[#22348A]/15 mb-5">
                   {s.n}
                 </div>
@@ -278,7 +285,7 @@ export default function Credit() {
                 <p className="text-gray-500 text-sm leading-relaxed">
                   {s.desc}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -288,12 +295,7 @@ export default function Credit() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-            >
+            <div>
               <span className="divider-accent mb-5 block" />
               <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl mb-5">
                 Eligibility requirements
@@ -303,40 +305,27 @@ export default function Credit() {
                 with a verifiable income source or business activity will
                 qualify.
               </p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={1}
-              variants={fadeUp}
-            >
+            </div>
+            <div>
               <div className="flex flex-col gap-3">
                 {eligibility.map((req, i) => (
-                  <motion.div
+                  <div
                     key={req}
-                    initial={{ opacity: 0, x: 16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07 }}
                     className="flex items-start gap-3 border border-gray-100 rounded-xl px-5 py-4 hover:border-[#22348A]/20 transition-colors"
                   >
                     <CheckCircle className="w-4 h-4 text-[#22348A] mt-0.5 shrink-0" />
                     <span className="text-gray-700 text-sm">{req}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
               <div className="mt-8">
                 <Link href="/apply">
-                  <motion.div
-                    whileHover={{ scale: 1.04 }}
-                    className="inline-flex items-center gap-2 bg-[#22348A] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer"
-                  >
+                  <div className="inline-flex items-center gap-2 bg-[#22348A] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer">
                     Start Your Application <ArrowRight className="w-4 h-4" />
-                  </motion.div>
+                  </div>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
