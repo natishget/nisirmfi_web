@@ -136,7 +136,7 @@ model DocumentChunk {
   documentId  String   @db.Uuid
   chunkIndex  Int
   chunkText   String
-  embedding   Unsupported("vector(768)")
+  embedding   Unsupported("vector(3072)")
   metadata    Json?
   createdAt   DateTime @default(now())
 
