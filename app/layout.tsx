@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Intro } from "./components/ui/intro";
+import Chat from "./components/chatbot/Chat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={` h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <Intro />
+        {/* <Intro /> */}
         <Navbar />
+        <Chat />
         {children}
         <Footer />
       </body>
