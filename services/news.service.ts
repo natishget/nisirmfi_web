@@ -5,6 +5,7 @@ import { Prisma, NewsStatus } from "@prisma/client";
 import prisma from "@/repositories/prismaClient";
 import { AppError } from "@/utils/api/error";
 import type { NewsCreateInput, NewsUpdateInput } from "@/validators/news";
+import { deleteImageFile } from "@/lib/api/upload";
 
 const newsSelect = {
   id: true,
@@ -79,11 +80,12 @@ export async function getNewsById(id: string) {
   return news;
 }
 
-export async function createNews(data: NewsCreateInput) {
+export async function createNews(data: NewsCreateInput, imagePath: string) {
   return prisma.news.create({
     data: {
       ...data,
       publishedDate: data.publishedDate,
+      imageUrl: imagePath,
     },
     select: newsSelect,
   });
@@ -111,5 +113,14 @@ export async function updateNews(id: string, data: NewsUpdateInput) {
 }
 
 export async function deleteNews(id: string) {
+  const news = await prisma.news.findUnique({
+    where: { id },
+    select: { imageUrl: true },
+  });
+
+  if (news?.imageUrl) {
+    await deleteImageFile(news.imageUrl);
+  }
+
   await prisma.news.delete({ where: { id } });
 }

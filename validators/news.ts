@@ -12,7 +12,7 @@ const baseNewsSchema = z.object({
     .number()
     .int()
     .positive("Read time must be a positive number"),
-  imageUrl: z.string().trim().url("Valid image URL is required"),
+  imageUrl: z.string().trim().min(1, "Image path or URL is required"),
   isFeatured: z.coerce.boolean().default(false),
 });
 

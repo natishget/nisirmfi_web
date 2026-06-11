@@ -167,7 +167,7 @@ const Chat = () => {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
       {!isOpen ? (
         <button
-          className="text-white p-4 bg-blue-950 hover:bg-blue-900 shadow-lg rounded-full transition-all duration-200 hover:scale-105 border border-gray-50"
+          className="text-white p-4 bg-[#22348A] hover:bg-[#1a2a6c] shadow-lg rounded-full transition-all duration-200 hover:scale-105 border border-gray-50"
           onClick={handleChatOpen}
         >
           <MessageCircleMore className="h-6 w-6" />
@@ -175,7 +175,7 @@ const Chat = () => {
       ) : (
         <div className="w-[350px] h-[550px] bg-white border border-gray-200 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="bg-blue-950 text-white p-4 relative">
+          <div className="bg-[#22348A] text-white p-4 relative">
             <button
               onClick={handleChatOpen}
               className="absolute top-4 right-4 text-gray-300 hover:text-white"
@@ -226,7 +226,7 @@ const Chat = () => {
                     <div
                       className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
                         msg.sender === "user"
-                          ? "bg-blue-950 text-white rounded-br-sm"
+                          ? "bg-[#22348A] text-white rounded-br-sm"
                           : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm"
                       }`}
                     >

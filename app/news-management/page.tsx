@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
   Clock3,
   Eye,
-  Filter,
   Image as ImageIcon,
   LayoutList,
-  Megaphone,
   MoreHorizontal,
   Plus,
   Search,
@@ -19,6 +17,7 @@ import {
   Save,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +56,7 @@ import {
 type NewsStatus = "Published" | "Draft" | "Scheduled";
 
 type NewsItem = {
-  id: number;
+  id: string | number;
   title: string;
   category: string;
   status: NewsStatus;
@@ -77,91 +76,9 @@ type NewsFormState = {
   author: string;
   publishedAt: string;
   readTime: string;
-  image: string;
+  image: File | null;
   featured: boolean;
 };
-
-const initialNews: NewsItem[] = [
-  {
-    id: 1,
-    title: "Nisir MFI Crosses 20,000 Active Customer Milestone",
-    category: "Institutional",
-    status: "Published",
-    summary:
-      "A milestone update highlighting customer growth, financial inclusion progress, and service expansion across Ethiopia.",
-    author: "Corporate Communications",
-    publishedAt: "2024-03-14",
-    readTime: "4 min read",
-    image:
-      "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "New Branch Opening in Wolaita Sodo",
-    category: "Expansion",
-    status: "Published",
-    summary:
-      "The branch network continues to expand with a new location serving customers in Southern Ethiopia.",
-    author: "Branch Operations",
-    publishedAt: "2024-01-22",
-    readTime: "2 min read",
-    image:
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: 3,
-    title: "Digital Account Opening Now Available at Selected Branches",
-    category: "Digital",
-    status: "Scheduled",
-    summary:
-      "A product update for the next rollout wave of digital onboarding at high-traffic branches.",
-    author: "Product Team",
-    publishedAt: "2024-04-05",
-    readTime: "3 min read",
-    image:
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: 4,
-    title: "Women Entrepreneurs Program Surpasses ETB 12 Million Disbursed",
-    category: "Community",
-    status: "Draft",
-    summary:
-      "A community impact story about group lending and support for women-led businesses.",
-    author: "Impact Desk",
-    publishedAt: "2024-02-18",
-    readTime: "5 min read",
-    image:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: 5,
-    title: "Understanding the Micro-Enterprise Loan: A Borrower’s Guide",
-    category: "Financial Education",
-    status: "Published",
-    summary:
-      "An educational article that explains eligibility, documents, and common questions from borrowers.",
-    author: "Education Desk",
-    publishedAt: "2023-10-18",
-    readTime: "5 min read",
-    image:
-      "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: 6,
-    title: "Q3 2023 Performance: Growth in Deposits and Disbursements",
-    category: "Institutional",
-    status: "Published",
-    summary:
-      "A quarterly performance report capturing deposits, lending momentum, and repayment strength.",
-    author: "Finance Team",
-    publishedAt: "2023-09-28",
-    readTime: "3 min read",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80",
-  },
-];
 
 const categories = [
   "All",
@@ -203,35 +120,20 @@ const defaultFormState: NewsFormState = {
   author: "Admin Team",
   publishedAt: new Date().toISOString().slice(0, 10),
   readTime: "3 min read",
-  image:
-    "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80",
+  image: null,
   featured: false,
 };
 
 function formatDisplayDate(dateValue: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(dateValue));
-}
-
-function createFormState(item?: NewsItem | null): NewsFormState {
-  if (!item) {
-    return defaultFormState;
+  try {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(new Date(dateValue));
+  } catch (e) {
+    return dateValue;
   }
-
-  return {
-    title: item.title,
-    category: item.category,
-    status: item.status,
-    summary: item.summary,
-    author: item.author,
-    publishedAt: item.publishedAt,
-    readTime: item.readTime,
-    image: item.image,
-    featured: Boolean(item.featured),
-  };
 }
 
 function fieldLabel(text: string) {
@@ -243,7 +145,7 @@ function fieldLabel(text: string) {
 }
 
 export default function NewsManagementPage() {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>(initialNews);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [statusFilter, setStatusFilter] = useState<"All" | NewsStatus>("All");
@@ -251,6 +153,158 @@ export default function NewsManagementPage() {
   const [editingItem, setEditingItem] = useState<NewsItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<NewsItem | null>(null);
   const [formState, setFormState] = useState<NewsFormState>(defaultFormState);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("formState", formState);
+  }, [formState]);
+
+  useEffect(() => {
+    async function loadNews() {
+      try {
+        const response = await fetch("/api/news?limit=100");
+        if (!response.ok) {
+          throw new Error("Failed to load news items from server");
+        }
+        const json = await response.json();
+        const mapped: NewsItem[] = json.data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          category: item.category,
+          status:
+            item.status === "PUBLISHED" ? "Published" :
+            item.status === "ARCHIVED" ? "Scheduled" : "Draft",
+          summary: item.summary,
+          author: "Admin Team",
+          publishedAt: item.publishedDate ? item.publishedDate.slice(0, 10) : new Date().toISOString().slice(0, 10),
+          readTime: `${item.readTime} min read`,
+          image: item.imageUrl,
+          featured: item.isFeatured,
+        }));
+        setNewsItems(mapped);
+      } catch (err) {
+        console.error("Failed to load news from server:", err);
+      }
+    }
+    loadNews();
+  }, []);
+
+  const submitNewsItem = async (item: NewsFormState) => {
+    const formData = new FormData();
+
+    // 1. Append all text and boolean fields
+    formData.append("title", item.title.trim());
+    formData.append("category", item.category);
+    formData.append("status", item.status);
+    formData.append("summary", item.summary.trim());
+    formData.append("author", item.author.trim());
+    formData.append("publishedAt", item.publishedAt);
+    formData.append("readTime", item.readTime.trim() || "3 min read");
+    formData.append("featured", String(item.featured));
+
+    // 2. Append the file if a new one was uploaded
+    if (item.image) {
+      formData.append("image", item.image); // This is the raw File object
+    } else if (editingItem) {
+      formData.append("existingImageUrl", editingItem.image);
+    }
+
+    const response = await fetch(
+      `${editingItem ? `/api/news/${editingItem.id}` : `/api/news`}`,
+      {
+        method: editingItem ? "PUT" : "POST",
+        body: formData,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to save news item to server");
+    }
+    const json = await response.json();
+    const serverItem = json.data;
+
+    // Map backend server item to frontend NewsItem format
+    const mappedItem: NewsItem = {
+      id: serverItem.id,
+      title: serverItem.title,
+      category: serverItem.category,
+      status:
+        serverItem.status === "PUBLISHED" ? "Published" :
+        serverItem.status === "ARCHIVED" ? "Scheduled" : "Draft",
+      summary: serverItem.summary,
+      author: "Admin Team",
+      publishedAt: serverItem.publishedDate ? serverItem.publishedDate.slice(0, 10) : item.publishedAt,
+      readTime: `${serverItem.readTime} min read`,
+      image: serverItem.imageUrl,
+      featured: serverItem.isFeatured,
+    };
+
+    return mappedItem;
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // 1. Setup a temporary local image preview URL for an instant UI update
+    let localPreviewUrl = "/placeholder.svg";
+    if (formState.image) {
+      localPreviewUrl = URL.createObjectURL(formState.image);
+    } else if (editingItem) {
+      localPreviewUrl = editingItem.image;
+    }
+
+    const targetId = editingItem?.id ?? Date.now();
+
+    const optimisticItem: NewsItem = {
+      id: targetId,
+      title: formState.title.trim(),
+      category: formState.category.trim(),
+      status: formState.status,
+      summary: formState.summary.trim(),
+      author: formState.author.trim(),
+      publishedAt: formState.publishedAt,
+      readTime: formState.readTime.trim() || "3 min read",
+      image: localPreviewUrl,
+      featured: formState.featured,
+    };
+
+    setNewsItems((current) => {
+      if (editingItem) {
+        return current.map((item) =>
+          item.id === editingItem.id ? optimisticItem : item,
+        );
+      }
+      return [optimisticItem, ...current];
+    });
+
+    setEditorOpen(false);
+    const backupEditingItem = editingItem; // Backup reference in case we need to roll back
+    setEditingItem(null);
+    setFormState(defaultFormState);
+
+    try {
+      const savedItemFromServer: NewsItem = await submitNewsItem(formState);
+
+      setNewsItems((current) =>
+        current.map((item) =>
+          item.id === targetId ? savedItemFromServer : item,
+        ),
+      );
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Could not save to server. Reverting your local changes.");
+
+      setNewsItems((current) => {
+        if (backupEditingItem) {
+          return current.map((item) =>
+            item.id === backupEditingItem.id ? backupEditingItem : item,
+          );
+        }
+        return current.filter((item) => item.id !== targetId);
+      });
+    }
+  };
 
   const filteredItems = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -289,49 +343,43 @@ export default function NewsManagementPage() {
 
   const openEdit = (item: NewsItem) => {
     setEditingItem(item);
-    setFormState(createFormState(item));
+
+    setFormState({
+      title: item.title,
+      category: item.category,
+      status: item.status,
+      summary: item.summary,
+      author: item.author,
+      publishedAt: item.publishedAt,
+      readTime: item.readTime,
+      image: null,
+      featured: item.featured ?? false,
+    });
+
     setEditorOpen(true);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
 
-    const nextItem: NewsItem = {
-      id: editingItem?.id ?? Date.now(),
-      title: formState.title.trim(),
-      category: formState.category.trim(),
-      status: formState.status,
-      summary: formState.summary.trim(),
-      author: formState.author.trim(),
-      publishedAt: formState.publishedAt,
-      readTime: formState.readTime.trim() || "3 min read",
-      image: formState.image.trim(),
-      featured: formState.featured,
-    };
+    try {
+      const response = await fetch(`/api/news/${deleteTarget.id}`, {
+        method: "DELETE",
+      });
 
-    setNewsItems((current) => {
-      if (editingItem) {
-        return current.map((item) =>
-          item.id === editingItem.id ? nextItem : item,
-        );
+      if (!response.ok) {
+        throw new Error("Failed to delete news item from server");
       }
 
-      return [nextItem, ...current];
-    });
-
-    setEditorOpen(false);
-    setEditingItem(null);
-  };
-
-  const handleDelete = () => {
-    if (!deleteTarget) {
-      return;
+      setNewsItems((current) =>
+        current.filter((item) => item.id !== deleteTarget.id),
+      );
+    } catch (error) {
+      console.error("Delete Error:", error);
+      alert("Could not delete news item from the server. Please try again.");
+    } finally {
+      setDeleteTarget(null);
     }
-
-    setNewsItems((current) =>
-      current.filter((item) => item.id !== deleteTarget.id),
-    );
-    setDeleteTarget(null);
   };
 
   return (
@@ -343,11 +391,12 @@ export default function NewsManagementPage() {
             News Management
           </h1>
           <p className="mt-3 max-w-2xl text-white/70">
-            Manage News postings, Edit and Delete existing news, and create a
+            Manage News postings, Edit and Delete existing news, and create
             featured news posts.
           </p>
         </div>
       </section>
+
       <section className="relative -mt-10 pb-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 space-y-6">
           <div className="grid gap-4 md:grid-cols-4">
@@ -523,7 +572,10 @@ export default function NewsManagementPage() {
                       </TableCell>
                       <TableCell className="align-top">
                         <span
-                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${categoryClasses[item.category] || "bg-slate-100 text-slate-700"}`}
+                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                            categoryClasses[item.category] ||
+                            "bg-slate-100 text-slate-700"
+                          }`}
                         >
                           <Tag className="mr-1 h-3.5 w-3.5" />
                           {item.category}
@@ -531,7 +583,9 @@ export default function NewsManagementPage() {
                       </TableCell>
                       <TableCell className="align-top">
                         <span
-                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${badgeClasses[item.status]}`}
+                          className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                            badgeClasses[item.status]
+                          }`}
                         >
                           {item.status}
                         </span>
@@ -730,18 +784,26 @@ export default function NewsManagementPage() {
               </label>
 
               <label className="space-y-2 md:col-span-2">
-                {fieldLabel("Image URL")}
+                {fieldLabel("Upload Image")}
                 <input
-                  required
-                  value={formState.image}
-                  onChange={(event) =>
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+
+                    if (!file) return;
+
+                    if (file.size > 1_000_000) {
+                      alert("Please select an image up to 1MB");
+                      return;
+                    }
+
                     setFormState((current) => ({
                       ...current,
-                      image: event.target.value,
-                    }))
-                  }
-                  className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-[#22348A]/30 focus:ring-2 focus:ring-[#22348A]/10"
-                  placeholder="https://..."
+                      image: file,
+                    }));
+                  }}
+                  className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm"
                 />
               </label>
 

@@ -54,9 +54,9 @@ export default function AdminLoginForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="text-white pt-10 pb-10 md:px-18 px-4 border-2 border-gray-300 rounded-4xl md:w-[550px] md:h-[550px] w-[90%] h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/5 backdrop-blur-sm"
+      className="text-blue-900 pt-10 pb-10 md:px-18 px-4 border-2 border-gray-300 rounded-4xl md:w-[550px] md:h-[400px] w-[90%] h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/5 backdrop-blur-sm"
     >
-      <h3 className="font-semibold text-xl mb-3">Maker</h3>
+      {/* <h3 className="font-semibold text-xl mb-3">Maker</h3> */}
       <h1 className="font-semibold text-3xl mb-5">Login</h1>
 
       <div className="flex flex-col gap-1 mb-3">
@@ -67,7 +67,7 @@ export default function AdminLoginForm() {
           {...register("email")}
           placeholder="name@company.com"
           autoComplete="email"
-          className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
+          className=" p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800 border border-gray-300"
         />
         {errors.email ? (
           <p className="text-red-300 text-sm">{errors.email.message}</p>
@@ -82,7 +82,7 @@ export default function AdminLoginForm() {
           {...register("password")}
           placeholder="********"
           autoComplete="current-password"
-          className="bg-white p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800"
+          className=" p-2 rounded-lg placeholder:text-gray-500 placeholder:italic text-gray-800 border border-gray-300"
         />
         {errors.password ? (
           <p className="text-red-300 text-sm">{errors.password.message}</p>

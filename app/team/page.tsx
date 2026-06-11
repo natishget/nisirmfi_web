@@ -148,10 +148,9 @@ const managers = [
     photo: "../teams/Asedesach.jpg",
   },
   {
-    name: "Ato Sirak Hailu",
-    role: "Product Development Manager",
-    photo:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80",
+    name: "Yeshewafire Adela",
+    role: "Manager, HR Operations",
+    photo: "../teams/yeshewafire 2.jpg",
   },
   {
     name: "W/ro Tigist Mulugeta",
