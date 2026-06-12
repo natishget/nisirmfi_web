@@ -36,8 +36,8 @@ export default async function CareerDetailPage({
         endDate: career.endDate.toISOString(),
       }}
       relatedCareers={related.items
-        .filter((item) => item.id !== parsedCareerId.data)
-        .map((item) => ({
+        .filter((item: any) => item.id !== parsedCareerId.data)
+        .map((item:any) => ({
           id: item.id,
           title: item.title,
           department: item.department,

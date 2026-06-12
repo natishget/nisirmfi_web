@@ -10,7 +10,7 @@ export default async function CareerManagementPage() {
 
   return (
     <CareerManagementClient
-      initialCareers={items.map((career) => ({
+      initialCareers={items.map((career: any) => ({
         ...career,
         postDate: career.postDate.toISOString(),
         endDate: career.endDate.toISOString(),
