@@ -1,0 +1,27 @@
+from pydantic import BaseModel
+from typing import Optional
+
+
+class ChatRequest(BaseModel):
+    message: str
+    conversation_id: Optional[str] = None
+
+
+class ChatResponse(BaseModel):
+    response: str
+    conversation_id: str
+
+
+class MessageResponse(BaseModel):
+    id: str
+    role: str
+    content: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class ConversationResponse(BaseModel):
+    conversation_id: str
+    messages: list[MessageResponse]
