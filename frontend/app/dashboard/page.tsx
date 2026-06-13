@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   BriefcaseBusiness,
+  FileText,
   LayoutGrid,
   Megaphone,
   ShieldCheck,
@@ -39,6 +40,15 @@ const managementCards = [
     icon: UsersRound,
     accent: "from-[#8b5cf6] to-[#ec4899]",
     glow: "shadow-[0_25px_60px_rgba(139,92,246,0.2)]",
+  },
+  {
+    title: "Applications Management",
+    description:
+      "Track customer account openings, review submitted details, and update review statuses.",
+    href: "/applications-management",
+    icon: FileText,
+    accent: "from-[#ea580c] to-[#f97316]",
+    glow: "shadow-[0_25px_60px_rgba(234,88,12,0.2)]",
   },
 ];
 

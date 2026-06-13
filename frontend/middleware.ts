@@ -10,6 +10,7 @@ const protectedPagePrefixes = [
   "/careers-management",
   "/user-management",
   "/users-management",
+  "/applications-management",
   "/users",
 ];
 
@@ -60,6 +61,7 @@ export const config = {
     "/careers-management/:path*",
     "/user-management/:path*",
     "/users-management/:path*",
+    "/applications-management/:path*",
     "/users/:path*",
   ],
 };

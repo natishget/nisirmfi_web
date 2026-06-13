@@ -24,6 +24,14 @@ enum DocumentStatus {
   FAILED
 }
 
+enum AccountStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  MORE_INFO_REQUIRED
+}
+
 model User {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String   @unique
@@ -147,3 +155,23 @@ model DocumentChunk {
   @@map("document_chunks")
 }
 
+
+
+model Account {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationId String        @unique
+  firstName     String
+  lastName      String
+  phone         String
+  faydaNumber   String
+  dateOfBirth   DateTime
+  birthPlace    String
+  city          String
+  kebele        String
+  status        AccountStatus @default(PENDING)
+  statusNotes   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("account")
+}

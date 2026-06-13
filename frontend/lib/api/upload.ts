@@ -33,7 +33,7 @@ export async function validateAndSaveImage(file: File): Promise<string> {
     throw new AppError(
       "Invalid file type. Only JPG, PNG, WEBP, GIF, and SVG are allowed.",
       400,
-      "BAD_REQUEST"
+      "BAD_REQUEST",
     );
   }
 
@@ -56,7 +56,11 @@ export async function validateAndSaveImage(file: File): Promise<string> {
   const resolvedUploadDir = path.resolve(uploadDir);
 
   if (!resolvedPath.startsWith(resolvedUploadDir)) {
-    throw new AppError("Invalid upload path traversal detected", 400, "BAD_REQUEST");
+    throw new AppError(
+      "Invalid upload path traversal detected",
+      400,
+      "BAD_REQUEST",
+    );
   }
 
   // Convert File to Buffer and write to disk
@@ -76,14 +80,20 @@ export async function deleteImageFile(imagePath: string): Promise<void> {
   }
 
   // Prevent path traversal by normalizing the path and making sure it resides strictly under public/uploads
-  const normalizedPath = path.normalize(imagePath).replace(/^(\.\.(\/|\\))+/, "");
+  const normalizedPath = path
+    .normalize(imagePath)
+    .replace(/^(\.\.(\/|\\))+/, "");
   const absolutePath = path.join(process.cwd(), "public", normalizedPath);
-  const resolvedUploadsDir = path.resolve(path.join(process.cwd(), "public", "uploads"));
+  const resolvedUploadsDir = path.resolve(
+    path.join(process.cwd(), "public", "uploads"),
+  );
   const resolvedFilePath = path.resolve(absolutePath);
 
   // Ensure it resides strictly within public/uploads
   if (!resolvedFilePath.startsWith(resolvedUploadsDir)) {
-    console.warn(`File deletion rejected due to path mismatch: ${resolvedFilePath} vs ${resolvedUploadsDir}`);
+    console.warn(
+      `File deletion rejected due to path mismatch: ${resolvedFilePath} vs ${resolvedUploadsDir}`,
+    );
     return;
   }
 

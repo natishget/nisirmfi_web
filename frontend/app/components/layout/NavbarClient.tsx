@@ -66,6 +66,8 @@ const baseNavLinks: NavItem[] = [
     children: [
       { label: "Credit Services", href: "/credit" },
       { label: "Savings Services", href: "/savings" },
+      { label: "Open an Account", href: "/open-account" },
+      { label: "Track Account Application", href: "/open-account/track" },
     ],
   },
   { label: "News", href: "/news" },
