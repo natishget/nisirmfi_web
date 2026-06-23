@@ -78,7 +78,7 @@ export async function getOpenAccountById(id: string) {
   const openAccount = await prisma.account.findUnique({
     where: { id },
     select: openAccountSelect,
-  });
+  });   
 
   if (!openAccount) {
     throw new AppError("Application not found", 404, "NOT_FOUND");

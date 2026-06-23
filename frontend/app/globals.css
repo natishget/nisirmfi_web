@@ -181,4 +181,14 @@
     opacity: 0.04;
     pointer-events: none;
   }
+  
+.monitor-wrapper { width: 700px; display: flex; flex-direction: column; align-items: center; will-change: transform; }
+.monitor-lid { width: 100%; background: #d1d5db; border-radius: 12px 12px 0 0; padding: 10px 10px 0 10px; box-shadow: 0 20px 60px rgba(34, 52, 138, 0.15), 0 2px 8px rgba(0,0,0,0.1); }
+.monitor-bezel { background: #1a1a2e; border-radius: 8px 8px 0 0; padding: 8px; padding-bottom: 0; }
+.monitor-screen { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 4px 4px 0 0; overflow: hidden; position: relative; }
+.monitor-base { width: 105%; background: linear-gradient(180deg, #c8ccd2 0%, #b8bcc2 100%); border-radius: 0 0 4px 4px; height: 18px; display: flex; flex-direction: column; align-items: center; }
+.monitor-hinge { width: 40px; height: 6px; background: #a0a4aa; border-radius: 0 0 4px 4px; }
+.monitor-keyboard { width: 96%; height: 8px; background: #c0c4ca; border-radius: 0 0 2px 2px; margin-top: 2px; }
+.monitor-trackpad { width: 80px; height: 0; border-bottom: 0; }
+
 }

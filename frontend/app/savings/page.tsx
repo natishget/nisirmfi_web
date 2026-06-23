@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import SavingsStackSection from "../components/SavingsStackSection";
 
 const IMG = {
   hero: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80",
@@ -109,9 +110,9 @@ const fadeUp = {
 
 export default function Savings() {
   return (
-    <div className="overflow-x-hidden ">
+    <div className="overflow-x-clip ">
       {/* Hero */}
-      <section className="relative overflow-hidden min-h-[55vh] flex items-end">
+      <section className="relative overflow-hidden min-h-[75vh] flex items-end">
         <div className="absolute inset-0">
           <img
             src={IMG.hero}
@@ -120,7 +121,7 @@ export default function Savings() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a52] via-[#0d1a52]/65 to-[#22348A]/30" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 w-full">
+        <div className="relative max-w-[95%] mx-auto px-5 sm:px-8 lg:px-12 py-20 w-full">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,6 +148,7 @@ export default function Savings() {
       </section>
 
       {/* Products */}
+      {/*
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <motion.div
@@ -218,6 +220,9 @@ export default function Savings() {
           </div>
         </div>
       </section>
+       */}
+
+      <SavingsStackSection />
 
       {/* Why Save With Us */}
       <section className="py-24 bg-[#f0f3fc]">

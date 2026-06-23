@@ -122,11 +122,10 @@ export default function NavbarClient({
 
   return (
     <header
-      className={`fixed left-0 right-0 z-50 transition-all duration-75 bg-white border-b border-gray-100 ${
-        scrolled ? "shadow-sm top-0" : "w-[80%] mx-auto rounded-full top-1"
-      }`}
+      className={`fixed left-0 right-0 z-50 transition-all duration-75 bg-white border-b border-gray-100 ${scrolled ? "shadow-sm top-0" : "max-w-[95%] mx-auto rounded-full top-1"
+        }`}
     >
-      <nav className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+      <nav className="max-w-[95%] mx-auto px-5 sm:px-8 lg:px-10">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link href="/">
             <div
@@ -138,10 +137,10 @@ export default function NavbarClient({
               </div>
               <div>
                 <div className="font-bold text-base leading-tight tracking-tight transition-colors text-[#22348A]">
-                  Nisir MFI
+                  ንስር ማይክሮፋይናንስ
                 </div>
                 <div className="text-[10px] leading-tight tracking-wider uppercase transition-colors text-gray-400">
-                  Microfinance Institution S.C.
+                  Nisir Microfinance Institution
                 </div>
               </div>
             </div>
@@ -158,11 +157,10 @@ export default function NavbarClient({
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 px-4 py-2 rounded text-sm font-medium transition-colors ${
-                      isDropdownActive(link) || openDropdown === link.label
-                        ? "text-[#22348A] bg-[#f0f3fc]"
-                        : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
-                    }`}
+                    className={`flex items-center gap-1 px-4 py-2 rounded text-sm font-medium transition-colors ${isDropdownActive(link) || openDropdown === link.label
+                      ? "text-[#22348A] bg-[#f0f3fc]"
+                      : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
+                      }`}
                   >
                     {link.label}
                     <span
@@ -208,11 +206,10 @@ export default function NavbarClient({
               ) : (
                 <Link key={link.href} href={link.href}>
                   <div
-                    className={`px-4 py-2 rounded text-sm font-medium transition-colors cursor-pointer ${
-                      isActive(link.href)
-                        ? "text-[#22348A] bg-[#f0f3fc]"
-                        : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
-                    }`}
+                    className={`px-4 py-2 rounded text-sm font-medium transition-colors cursor-pointer ${isActive(link.href)
+                      ? "text-[#22348A] bg-[#f0f3fc]"
+                      : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
+                      }`}
                   >
                     {link.label}
                   </div>
@@ -221,13 +218,21 @@ export default function NavbarClient({
             )}
           </div>
 
-          <div className="hidden lg:flex">
+          <div className="hidden lg:flex gap-3">
             <Link href="/apply">
               <div
                 data-testid="link-apply-nav"
-                className="text-sm font-semibold px-5 py-2.5 rounded transition-all cursor-pointer bg-[#22348A] text-white hover:bg-[#162260]"
+                className="text-sm font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer bg-[#22348A] text-white hover:bg-[#162260]"
               >
                 Apply for a Loan
+              </div>
+            </Link>
+            <Link href="/open-account">
+              <div
+                data-testid="link-open-nav"
+                className="text-sm font-semibold px-5 py-2.5 rounded-full  transition-all cursor-pointer border border-[#22348A] text-[#22348A] hover:border-[#22348A] hover:text-[#162260]"
+              >
+                Open Account
               </div>
             </Link>
           </div>
@@ -236,11 +241,10 @@ export default function NavbarClient({
             type="button"
             onClick={() => setIsOpen((value) => !value)}
             data-testid="button-mobile-menu"
-            className={`lg:hidden p-2 rounded transition-colors ${
-              scrolled
-                ? "text-gray-700 hover:bg-gray-100"
-                : "text-white hover:bg-white/10"
-            }`}
+            className={`lg:hidden p-2 rounded transition-colors ${scrolled
+              ? "text-gray-700 hover:bg-gray-100"
+              : "text-white hover:bg-white/10"
+              }`}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -286,11 +290,10 @@ export default function NavbarClient({
             ) : (
               <Link key={link.href} href={link.href}>
                 <div
-                  className={`px-3 py-2.5 rounded text-sm font-medium cursor-pointer transition-colors ${
-                    isActive(link.href)
-                      ? "text-[#22348A] bg-[#f0f3fc]"
-                      : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
-                  }`}
+                  className={`px-3 py-2.5 rounded text-sm font-medium cursor-pointer transition-colors ${isActive(link.href)
+                    ? "text-[#22348A] bg-[#f0f3fc]"
+                    : "text-gray-700 hover:text-[#22348A] hover:bg-[#f0f3fc]"
+                    }`}
                 >
                   {link.label}
                 </div>

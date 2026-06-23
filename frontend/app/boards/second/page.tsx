@@ -2,11 +2,19 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Landmark } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const heroImg = "../boards/Together.jpg";
 
 const board = [
+  {
+    name: "Michael Addisu",
+    role: "Board Chairperson",
+    expertise: "CEO of Fisrt Addis Investment Bank",
+    bio: "A visionary finance leader with 20+ years shaping Ethiopia's financial sector. Formerly Senior Director at the National Bank of Ethiopia, Dr. Solomon drives Nisir's strategic growth and governance excellence.",
+    photo: "../boards/Michael Addisu.jpg",
+    bg: "#f0f3fc",
+  },
   {
     name: "Yodit Kassa",
     role: "D/Board Chairperson",
@@ -77,40 +85,40 @@ export default function OurBoards() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
 
   return (
-    <div className="overflow-x-hidden bg-[#f0f3fc] w-full ">
+    <div className="overflow-x-hidden ">
       {/* ── Hero ── */}
       <section
         ref={heroRef}
-        className="w-full overflow-hidden min-h-[50vh] flex justify-center relative"
+        className="relative overflow-hidden min-h-[85vh] flex items-end"
       >
         <motion.div style={{ y: bgY }} className="absolute inset-0 scale-110">
-          <div className="absolute inset-0 " />
+          <img
+            src={heroImg}
+            alt="Board of Directors"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a52] via-[#0d1a52]/65 to-[#22348A]/35" />
         </motion.div>
-        <div className="relative px-5 sm:px-8 lg:px-12 pb-8 pt-32 w-full  flex flex-col items-center justfy-center">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 w-full">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: easeOut }}
-            className="flex flex-col items-center text-center gap-5 "
           >
-            <div className="px-3 py-1 rounded-full bg-[#22348A]/10 w-fit text-[#22348A] text-xs flex  items-center gap-1">
-              <Landmark className="w-5 font-mono" /> INSTITUTIONAL GOVERNANCE
-            </div>
-            <h1 className=" text-[#22348A] font-hanken font-bold text-xl sm:text-3xl lg:text-4xl  mb-1 max-w-2xl">
+            <span className="block w-8 h-px bg-[#BCBDC1] mb-6" />
+            <h1 className="display-text text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-5 max-w-2xl">
               Board of Directors
             </h1>
-            <p className="text-gray-600  max-w-4xl text-sm ">
-              Guided by a collective commitment to financial inclusion and
-              ethical leadership, our board provides the strategic oversight
-              necessary to empower communities and foster sustainable economic
-              growth.
+            <p className="text-white/55 text-lg max-w-xl leading-relaxed">
+              Seven accomplished leaders guiding Nisir MFI's mission, strategy,
+              and long-term growth with integrity and vision.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* ── Intro strip ── */}
-      {/* <section className="bg-white border-b border-gray-100 py-10">
+      <section className="bg-white border-b border-gray-100 py-10">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-3 gap-px bg-gray-100 rounded overflow-hidden">
             {[
@@ -127,10 +135,11 @@ export default function OurBoards() {
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
-      <section className="pb-24 ">
-        <div className="max-w-[80%] mx-auto px-5 sm:px-8 lg:px-12">
+      {/* ── Board grid ── */}
+      <section className="py-24 bg-[#f0f3fc]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -138,65 +147,18 @@ export default function OurBoards() {
             variants={fadeUp}
             className="mb-16"
           >
-            {/* <span className="divider-accent mb-5 block" />
+            <span className="divider-accent mb-5 block" />
             <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl mb-3">
               Meet the Board
-            </h2> */}
-            {/* <p className="text-gray-500 text-sm max-w-lg">
+            </h2>
+            <p className="text-gray-500 text-sm max-w-lg">
               A collective of young, experienced, and influential Ethiopian
               professionals who share a single commitment — making Nisir MFI a
               model of ethical, impactful microfinance.
-            </p> */}
+            </p>
           </motion.div>
 
-          <div className="">
-            <motion.div
-              key="Michael Addisu"
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0 * 0.07,
-                duration: 0.6,
-                ease: easeOut,
-              }}
-              whileHover={{ y: -4, transition: { duration: 0.25 } }}
-              className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-500 flex gap-10 p-10 "
-            >
-              {/* Photo */}
-              <div className="overflow-hidden w-fit">
-                <motion.img
-                  src="../boards/Michael Addisu.jpg"
-                  alt="Michael Addisu"
-                  className="w-[25vw] h-fit object-cover rounded-xl"
-                  whileHover={{ scale: 1.04 }}
-                  transition={{ duration: 0.6, ease: easeOut }}
-                />
-              </div>
-              {/* Content */}
-              <div className="flex flex-col justify-center w-[35vw]">
-                <div className="mb-4">
-                  <p className="text-[#00c1de] text-xs font-semibold uppercase tracking-widest mb-3">
-                    Chairman of The Board
-                  </p>
-                  <h3 className="display-text text-[#22348A] text-xl leading-tight mb-1">
-                    Michael Addisu
-                  </h3>
-                </div>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-                  quia soluta deserunt quas accusamus itaque dignissimos
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Board grid ── */}
-      <section className="py-24 ">
-        <div className="max-w-[95%] mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-18">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {board.map((member, i) => (
               <motion.div
                 key={member.name}
@@ -212,15 +174,15 @@ export default function OurBoards() {
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-500"
               >
                 {/* Photo */}
-                <div className="relative h-fit overflow-hidden p-4">
+                <div className="relative h-64 overflow-hidden">
                   <motion.img
                     src={member.photo}
                     alt={member.name}
-                    className="w-full h-fit object-cover object-top rounded-xl"
+                    className="w-full h-full object-cover object-top"
                     whileHover={{ scale: 1.04 }}
                     transition={{ duration: 0.6, ease: easeOut }}
                   />
-
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a52]/80 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-5 right-5">
                     <span className="inline-block bg-white/15 backdrop-blur-sm border border-white/20 text-white text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
                       {member.expertise}

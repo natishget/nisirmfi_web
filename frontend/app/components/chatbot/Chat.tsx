@@ -109,14 +109,14 @@ const Chat = () => {
     try {
       const payload = conversationId
         ? {
-            message: currentMessage,
-            conversation_id: conversationId,
-          }
+          message: currentMessage,
+          conversation_id: conversationId,
+        }
         : {
-            message: currentMessage,
-          };
+          message: currentMessage,
+        };
 
-      const response = await fetch("http://127.0.0.1:8000/chat/", {
+      const response = await fetch("http://172.20.20.192:8000/chat/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -229,16 +229,14 @@ const Chat = () => {
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${
-                      msg.sender === "user" ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
-                        msg.sender === "user"
+                      className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${msg.sender === "user"
                           ? "bg-[#22348A] text-white rounded-br-sm"
                           : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm"
-                      }`}
+                        }`}
                     >
                       {msg.content}
                     </div>

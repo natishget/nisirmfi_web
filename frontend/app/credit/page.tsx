@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import LoanMonitorSection from "../components/LoanMonitorSection";
 
 const IMG = {
   hero: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=80",
@@ -14,12 +15,12 @@ const IMG = {
 
 const products = [
   {
-    title: "Small and Meddium Enterprise (SME)",
+    title: "Small and Medium Enterprise (SME)",
     tagline: "For established and growing enterprises",
     img: IMG.biz,
-    amount: "ETB 10,000 – 2,000,000",
-    term: "6 – 36 months",
-    desc: "Flexible financing for business expansion, equipment purchase, working capital, and operational growth.",
+    amount: "12,000,000 ETB",
+    term: "5 Years",
+    desc: "Scale your operations, purchase inventory, or expand your team with flexible business financing.",
     features: [
       "Competitive interest rates",
       "Flexible collateral options",
@@ -158,9 +159,9 @@ const fadeUp = {
 
 export default function Credit() {
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-clip">
       {/* Hero */}
-      <section className="relative overflow-hidden min-h-[55vh] flex items-end">
+      <section className="relative overflow-hidden min-h-[70vh] flex items-end">
         <div className="absolute inset-0">
           <img
             src={IMG.hero}
@@ -190,7 +191,7 @@ export default function Credit() {
       </section>
 
       {/* Loan Products */}
-      <section className="py-24 bg-white">
+      {/* <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="mb-14">
             <span className="divider-accent mb-5 block" />
@@ -204,7 +205,7 @@ export default function Credit() {
                 key={p.title}
                 className="group grid lg:grid-cols-5 gap-0 rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-500"
               >
-                {/* Left image + text */}
+                Left image + text
                 <div className="lg:col-span-2 relative min-h-[200px]">
                   <img
                     src={p.img}
@@ -221,7 +222,7 @@ export default function Credit() {
                     </h3>
                   </div>
                 </div>
-                {/* Right */}
+                Right
                 <div className="lg:col-span-3 bg-white p-8 flex flex-col justify-between gap-6">
                   <p className="text-gray-500 text-sm leading-relaxed">
                     {p.desc}
@@ -262,7 +263,9 @@ export default function Credit() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
+
+      <LoanMonitorSection />
 
       {/* How It Works */}
       <section className="py-24 bg-[#f0f3fc]">
