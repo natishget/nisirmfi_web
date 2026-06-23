@@ -23,6 +23,20 @@ from app.llm.prompt_builder import (
     build_prompt
 )
 
+async def create_conversation(db, conversation_id: str | None = None):
+    print(f"=====================================================\nCreating a new conversation with ID: {conversation_id if conversation_id else 'None (will be auto-generated)'}")
+    # If a deterministic UUID was passed in, use it. Otherwise, let DB or default handle it.
+    new_conversation = Conversation(
+        id=conversation_id if conversation_id else None,
+        # ... your other default fields like title or chatUserId ...
+    )
+    
+    db.add(new_conversation)
+    await db.commit()
+    await db.refresh(new_conversation)
+    print(f"New conversation created with ID: {new_conversation.id}")
+    return new_conversation
+
 
 async def process_user_message(
     db,
@@ -30,22 +44,19 @@ async def process_user_message(
     conversation_id: str | None = None
 ):
     if not conversation_id:
+        print(f"=====================================================\nNo conversation_id provided. Creating a new conversation...")
         conversation = await create_conversation(db)
-
         conversation_id = conversation.id
-
     else:
-        conversation = await db.get(
-            Conversation,
-            conversation_id
-        )
+        # 1. Check if this deterministic UUID already exists in the DB
+        conversation = await db.get(Conversation, conversation_id)
 
+        # 2. If it does NOT exist, create it using our Telegram UUID
         if not conversation:
-            conversation = await create_conversation(db)
-
+            # Pass the conversation_id to your creator function
+            print(f"=====================================================\nConversation not found for ID: {conversation_id}. Creating a new one.")
+            conversation = await create_conversation(db, conversation_id=conversation_id)
             conversation_id = conversation.id
-
-    
 
     await save_message(
         db=db,
