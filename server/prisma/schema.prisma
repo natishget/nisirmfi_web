@@ -1,0 +1,180 @@
+
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum DocumentStatus {
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum AccountStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  MORE_INFO_REQUIRED
+}
+
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String   @unique
+  password  String
+  fullName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model News {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  category       String
+  status         NewsStatus @default(DRAFT)
+  summary        String
+  publishedDate  DateTime
+  readTime       Int
+  imageUrl       String
+  isFeatured     Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@map("news")
+}
+
+model Career {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String
+  department       String
+  location         String
+  type             String
+  purpose          String
+  responsibilities String[]
+  qualification    String[]
+  salary           String
+  benefits         String[]
+  postDate         DateTime
+  endDate          DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("careers")
+}
+
+model ChatUser {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId     String?        @unique
+  email         String?
+  fullName      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  conversations Conversation[]
+
+  @@map("visitors")
+}
+
+model Conversation {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chatUserId     String?     @db.Uuid
+  title          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  lastMessageAt  DateTime    @default(now())
+
+  chatUser ChatUser? @relation(fields: [chatUserId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  @@index([chatUserId])
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversationId String       @db.Uuid
+  role           MessageRole
+  content        String
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+
+  @@map("messages")
+}
+
+model Document {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  fileName    String
+  source      String?
+  sourceType  String?
+  contentType String?
+  status      DocumentStatus @default(PROCESSING)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  chunks DocumentChunk[]
+
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId  String   @db.Uuid
+  chunkIndex  Int
+  chunkText   String
+  embedding   Unsupported("vector(3072)")
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+
+  @@map("document_chunks")
+}
+
+
+
+model Account {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationId String        @unique
+  firstName     String
+  lastName      String
+  phone         String
+  faydaNumber   String
+  dateOfBirth   DateTime
+  birthPlace    String
+  city          String
+  kebele        String
+  status        AccountStatus @default(PENDING)
+  statusNotes   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("account")
+}

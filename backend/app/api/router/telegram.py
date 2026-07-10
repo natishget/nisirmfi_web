@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from app.services.chat_service import process_user_message
+from app.core.rate_limit import telegram_rate_limiter
 
 from app.core.database import AsyncSessionLocal
 
@@ -30,6 +31,11 @@ async def handle_telegram_message(update: Update, context: ContextTypes.DEFAULT_
 
     # 🛠️ Convert the Telegram numeric ID into a valid, persistent UUID format
     telegram_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, telegram_chat_id))
+
+    # Apply rate limiting based on the user's UUID (conversation_id)
+    if not telegram_rate_limiter.is_allowed(telegram_uuid):
+        await update.message.reply_text("You are sending messages too fast. Please wait a moment.")
+        return
 
     await context.bot.send_chat_action(chat_id=telegram_chat_id, action="typing")
 

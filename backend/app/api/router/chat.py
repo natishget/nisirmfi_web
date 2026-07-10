@@ -1,8 +1,9 @@
 from app.rag.embeddings import generate_embedding
 from app.rag.ingestion_service import ingest_documents
 from app.rag.rag_service import retrieve_context
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.rate_limit import web_rate_limiter
 
 from app.schemas.chat import (
     ChatRequest,
@@ -28,10 +29,21 @@ router = APIRouter()
 
 @router.post("", response_model=ChatResponse)
 async def chat(
+    http_request: Request,
     request: ChatRequest,
     db: AsyncSession = Depends(get_db)
 ):
-    
+    # Extract client IP for rate limiting
+    client_ip = http_request.client.host if http_request.client else "unknown"
+    if "x-forwarded-for" in http_request.headers:
+        client_ip = http_request.headers["x-forwarded-for"].split(",")[0].strip()
+
+    if not web_rate_limiter.is_allowed(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many requests. Please try again later."
+        )
+
     print("message", request.message)
     print("conversation", request.conversation_id)
 

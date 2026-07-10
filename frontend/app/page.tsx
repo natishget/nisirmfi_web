@@ -43,37 +43,37 @@ const heroSlides: {
   kenTo: TargetAndTransition;
   transition: TransitionType;
 }[] = [
-    {
-      src: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?auto=format&fit=crop&w=1600&q=85",
-      kenFrom: { scale: 1.1, x: "2%" },
-      kenTo: { scale: 1, x: "0%" },
-      transition: "fade",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1600&q=80",
-      kenFrom: { scale: 1, x: "0%" },
-      kenTo: { scale: 1.08, x: "-2%" },
-      transition: "slideRight",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1600&q=80",
-      kenFrom: { scale: 1.12, y: "-1.5%" },
-      kenTo: { scale: 1, y: "1%" },
-      transition: "zoomIn",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
-      kenFrom: { scale: 1, y: "1%" },
-      kenTo: { scale: 1.07, y: "-1%" },
-      transition: "fade",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
-      kenFrom: { scale: 1.06, x: "-1.5%", y: "1%" },
-      kenTo: { scale: 1, x: "1%", y: "-1%" },
-      transition: "slideRight",
-    },
-  ];
+  {
+    src: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?auto=format&fit=crop&w=1600&q=85",
+    kenFrom: { scale: 1.1, x: "2%" },
+    kenTo: { scale: 1, x: "0%" },
+    transition: "fade",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1600&q=80",
+    kenFrom: { scale: 1, x: "0%" },
+    kenTo: { scale: 1.08, x: "-2%" },
+    transition: "slideRight",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1600&q=80",
+    kenFrom: { scale: 1.12, y: "-1.5%" },
+    kenTo: { scale: 1, y: "1%" },
+    transition: "zoomIn",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
+    kenFrom: { scale: 1, y: "1%" },
+    kenTo: { scale: 1.07, y: "-1%" },
+    transition: "fade",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
+    kenFrom: { scale: 1.06, x: "-1.5%", y: "1%" },
+    kenTo: { scale: 1, x: "1%", y: "-1%" },
+    transition: "slideRight",
+  },
+];
 const slideVariants: Record<
   TransitionType,
   {
@@ -569,12 +569,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ═══════════════════════════════════════════════════
-          SERVICES WITH ANIMATION
-      ═══════════════════════════════════════════════════ */}
-      <LoanMonitorSection />
-      <SavingsStackSection />
 
       {/* ═══════════════════════════════════════════════════
           WHY NISIR — PANEL GRID
