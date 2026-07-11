@@ -14,16 +14,18 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt_auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.userService.create(createUserDto);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -52,11 +54,11 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch(':id/change-password')
   changePassword(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    return this.userService.update(id, updateUserDto);
+    return this.userService.changePassword(id, changePasswordDto.password);
   }
 }

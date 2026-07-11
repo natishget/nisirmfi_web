@@ -1,0 +1,98 @@
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreateNewsDto } from './dto/create-news.dto';
+import { UpdateNewsDto } from './dto/update-news.dto';
+
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from 'src/generated/client';
+
+@Injectable()
+export class NewsService {
+  private static readonly newsIdPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createNewsDto: CreateNewsDto) {
+    try {
+      return await this.prisma.news.create({
+        data: {
+          ...createNewsDto,
+          publishedDate: new Date(createNewsDto.publishedDate),
+        },
+      });
+    } catch (error: unknown) {
+      this.handlePrismaError(error, 'create news');
+    }
+  }
+
+  async findAll() {
+    return await this.prisma.news.findMany();
+  }
+
+  async findOne(id: string) {
+    this.assertValidNewsId(id);
+
+    const news = await this.prisma.news.findUnique({ where: { id } });
+
+    if (!news) {
+      throw new NotFoundException(`News with ID ${id} not found`);
+    }
+
+    return news;
+  }
+
+  async update(id: string, updateNewsDto: UpdateNewsDto) {
+    this.assertValidNewsId(id);
+
+    try {
+      return await this.prisma.news.update({
+        where: { id },
+        data: updateNewsDto,
+      });
+    } catch (error: unknown) {
+      this.handlePrismaError(error, 'update news');
+    }
+  }
+
+  async remove(id: string) {
+    this.assertValidNewsId(id);
+
+    try {
+      return await this.prisma.news.delete({ where: { id } });
+    } catch (error: unknown) {
+      this.handlePrismaError(error, 'delete news');
+    }
+  }
+
+  private assertValidNewsId(id: string) {
+    if (!NewsService.newsIdPattern.test(id)) {
+      throw new BadRequestException('News Not Found!');
+    }
+  }
+
+  private handlePrismaError(error: unknown, action: string): never {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        throw new ConflictException(
+          'A news item with the same unique field already exists',
+        );
+      }
+
+      if (error.code === 'P2025') {
+        throw new NotFoundException('News Not Found!');
+      }
+
+      if (error.code === 'P2007') {
+        throw new BadRequestException('News Not Found!');
+      }
+    }
+
+    throw new InternalServerErrorException(`Failed to ${action}`);
+  }
+}

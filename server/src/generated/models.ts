@@ -8,13 +8,13 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User'
-export type * from './models/News'
-export type * from './models/Career'
-export type * from './models/ChatUser'
-export type * from './models/Conversation'
-export type * from './models/Message'
-export type * from './models/Document'
-export type * from './models/DocumentChunk'
-export type * from './models/Account'
-export type * from './commonInputTypes'
+export type * from './models/User.js'
+export type * from './models/News.js'
+export type * from './models/Career.js'
+export type * from './models/ChatUser.js'
+export type * from './models/Conversation.js'
+export type * from './models/Message.js'
+export type * from './models/Document.js'
+export type * from './models/DocumentChunk.js'
+export type * from './models/Account.js'
+export type * from './commonInputTypes.js'
