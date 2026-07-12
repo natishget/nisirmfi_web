@@ -41,7 +41,7 @@ export class CareerController {
     return this.careerService.findOne(id);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCareerDto: UpdateCareerDto) {
     return this.careerService.update(id, updateCareerDto);
