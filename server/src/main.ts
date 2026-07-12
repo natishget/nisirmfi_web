@@ -10,7 +10,7 @@ const PORT = Number(process.env.PORT) || 3001;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
 
   const allowedOrigin = (
