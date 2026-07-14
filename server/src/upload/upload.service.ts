@@ -10,4 +10,8 @@ export class UploadService {
       throw new Error(`Failed to upload file to Cloudinary: ${e.message}`);
     }
   }
+
+  async deleteImage(publicId: string) {
+    return await cloudinary.uploader.destroy(publicId);
+  }
 }
