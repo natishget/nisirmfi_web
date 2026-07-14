@@ -1122,6 +1122,7 @@ export const NewsScalarFieldEnum = {
   publishedDate: 'publishedDate',
   readTime: 'readTime',
   imageUrl: 'imageUrl',
+  imagePublicId: 'imagePublicId',
   isFeatured: 'isFeatured',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
