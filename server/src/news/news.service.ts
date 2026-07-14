@@ -10,23 +10,33 @@ import { UpdateNewsDto } from './dto/update-news.dto';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from 'src/generated/client';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class NewsService {
   private static readonly newsIdPattern =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly upload: UploadService,
+  ) {}
 
-  async create(createNewsDto: CreateNewsDto) {
+  async create(file: Express.Multer.File, createNewsDto: CreateNewsDto) {
     try {
-      return await this.prisma.news.create({
+      console.log('we are on service');
+      const uploaded = await this.upload.uploadToCloudinary(file);
+      console.log('file upload response', uploaded);
+      const news = await this.prisma.news.create({
         data: {
           ...createNewsDto,
+          imageUrl: uploaded.secure_url,
           publishedDate: new Date(createNewsDto.publishedDate),
         },
       });
+      return news;
     } catch (error: unknown) {
+      console.log('error on news service', error);
       this.handlePrismaError(error, 'create news');
     }
   }

@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -14,14 +16,21 @@ import { UpdateNewsDto } from './dto/update-news.dto';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt_auth.guard';
 
+import { FileInterceptor } from '@nestjs/platform-express';
+
 @Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createNewsDto: CreateNewsDto) {
-    return this.newsService.create(createNewsDto);
+  @UseInterceptors(FileInterceptor('image'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createNewsDto: CreateNewsDto,
+  ) {
+    // console.log('file', file);
+    return this.newsService.create(file, createNewsDto);
   }
 
   @Get()

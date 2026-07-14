@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateNewsDto {
   @IsString()
@@ -30,14 +31,16 @@ export class CreateNewsDto {
   @IsNotEmpty()
   publishedDate!: string;
 
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsNotEmpty()
   readTime!: number;
 
-  @IsString()
-  @IsNotEmpty()
-  imageUrl!: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // imageUrl!: string;
 
+  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   @IsNotEmpty()
   isFeatured!: boolean;
