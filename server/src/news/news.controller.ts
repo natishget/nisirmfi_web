@@ -50,6 +50,15 @@ export class NewsController {
     return this.newsService.update(id, updateNewsDto);
   }
 
+  @Patch(':id/image')
+  @UseInterceptors(FileInterceptor('image'))
+  changeImage(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.newsService.changeImage(id, file);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {

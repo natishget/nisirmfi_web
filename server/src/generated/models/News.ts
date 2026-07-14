@@ -43,6 +43,7 @@ export type NewsMinAggregateOutputType = {
   publishedDate: Date | null
   readTime: number | null
   imageUrl: string | null
+  imagePublicId: string | null
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +58,7 @@ export type NewsMaxAggregateOutputType = {
   publishedDate: Date | null
   readTime: number | null
   imageUrl: string | null
+  imagePublicId: string | null
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +73,7 @@ export type NewsCountAggregateOutputType = {
   publishedDate: number
   readTime: number
   imageUrl: number
+  imagePublicId: number
   isFeatured: number
   createdAt: number
   updatedAt: number
@@ -95,6 +98,7 @@ export type NewsMinAggregateInputType = {
   publishedDate?: true
   readTime?: true
   imageUrl?: true
+  imagePublicId?: true
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
@@ -109,6 +113,7 @@ export type NewsMaxAggregateInputType = {
   publishedDate?: true
   readTime?: true
   imageUrl?: true
+  imagePublicId?: true
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
@@ -123,6 +128,7 @@ export type NewsCountAggregateInputType = {
   publishedDate?: true
   readTime?: true
   imageUrl?: true
+  imagePublicId?: true
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
@@ -224,6 +230,7 @@ export type NewsGroupByOutputType = {
   publishedDate: Date
   readTime: number
   imageUrl: string
+  imagePublicId: string
   isFeatured: boolean
   createdAt: Date
   updatedAt: Date
@@ -261,6 +268,7 @@ export type NewsWhereInput = {
   publishedDate?: Prisma.DateTimeFilter<"News"> | Date | string
   readTime?: Prisma.IntFilter<"News"> | number
   imageUrl?: Prisma.StringFilter<"News"> | string
+  imagePublicId?: Prisma.StringFilter<"News"> | string
   isFeatured?: Prisma.BoolFilter<"News"> | boolean
   createdAt?: Prisma.DateTimeFilter<"News"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"News"> | Date | string
@@ -275,6 +283,7 @@ export type NewsOrderByWithRelationInput = {
   publishedDate?: Prisma.SortOrder
   readTime?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  imagePublicId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -292,6 +301,7 @@ export type NewsWhereUniqueInput = Prisma.AtLeast<{
   publishedDate?: Prisma.DateTimeFilter<"News"> | Date | string
   readTime?: Prisma.IntFilter<"News"> | number
   imageUrl?: Prisma.StringFilter<"News"> | string
+  imagePublicId?: Prisma.StringFilter<"News"> | string
   isFeatured?: Prisma.BoolFilter<"News"> | boolean
   createdAt?: Prisma.DateTimeFilter<"News"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"News"> | Date | string
@@ -306,6 +316,7 @@ export type NewsOrderByWithAggregationInput = {
   publishedDate?: Prisma.SortOrder
   readTime?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  imagePublicId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -328,6 +339,7 @@ export type NewsScalarWhereWithAggregatesInput = {
   publishedDate?: Prisma.DateTimeWithAggregatesFilter<"News"> | Date | string
   readTime?: Prisma.IntWithAggregatesFilter<"News"> | number
   imageUrl?: Prisma.StringWithAggregatesFilter<"News"> | string
+  imagePublicId?: Prisma.StringWithAggregatesFilter<"News"> | string
   isFeatured?: Prisma.BoolWithAggregatesFilter<"News"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"News"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"News"> | Date | string
@@ -342,6 +354,7 @@ export type NewsCreateInput = {
   publishedDate: Date | string
   readTime: number
   imageUrl: string
+  imagePublicId: string
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -356,6 +369,7 @@ export type NewsUncheckedCreateInput = {
   publishedDate: Date | string
   readTime: number
   imageUrl: string
+  imagePublicId: string
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -370,6 +384,7 @@ export type NewsUpdateInput = {
   publishedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   readTime?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +399,7 @@ export type NewsUncheckedUpdateInput = {
   publishedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   readTime?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,6 +414,7 @@ export type NewsCreateManyInput = {
   publishedDate: Date | string
   readTime: number
   imageUrl: string
+  imagePublicId: string
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -412,6 +429,7 @@ export type NewsUpdateManyMutationInput = {
   publishedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   readTime?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,6 +444,7 @@ export type NewsUncheckedUpdateManyInput = {
   publishedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   readTime?: Prisma.IntFieldUpdateOperationsInput | number
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -440,6 +459,7 @@ export type NewsCountOrderByAggregateInput = {
   publishedDate?: Prisma.SortOrder
   readTime?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  imagePublicId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -458,6 +478,7 @@ export type NewsMaxOrderByAggregateInput = {
   publishedDate?: Prisma.SortOrder
   readTime?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  imagePublicId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -472,6 +493,7 @@ export type NewsMinOrderByAggregateInput = {
   publishedDate?: Prisma.SortOrder
   readTime?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  imagePublicId?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -508,6 +530,7 @@ export type NewsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   publishedDate?: boolean
   readTime?: boolean
   imageUrl?: boolean
+  imagePublicId?: boolean
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -522,6 +545,7 @@ export type NewsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   publishedDate?: boolean
   readTime?: boolean
   imageUrl?: boolean
+  imagePublicId?: boolean
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -536,6 +560,7 @@ export type NewsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   publishedDate?: boolean
   readTime?: boolean
   imageUrl?: boolean
+  imagePublicId?: boolean
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -550,12 +575,13 @@ export type NewsSelectScalar = {
   publishedDate?: boolean
   readTime?: boolean
   imageUrl?: boolean
+  imagePublicId?: boolean
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type NewsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "category" | "status" | "summary" | "publishedDate" | "readTime" | "imageUrl" | "isFeatured" | "createdAt" | "updatedAt", ExtArgs["result"]["news"]>
+export type NewsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "category" | "status" | "summary" | "publishedDate" | "readTime" | "imageUrl" | "imagePublicId" | "isFeatured" | "createdAt" | "updatedAt", ExtArgs["result"]["news"]>
 
 export type $NewsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "News"
@@ -569,6 +595,7 @@ export type $NewsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     publishedDate: Date
     readTime: number
     imageUrl: string
+    imagePublicId: string
     isFeatured: boolean
     createdAt: Date
     updatedAt: Date
@@ -1003,6 +1030,7 @@ export interface NewsFieldRefs {
   readonly publishedDate: Prisma.FieldRef<"News", 'DateTime'>
   readonly readTime: Prisma.FieldRef<"News", 'Int'>
   readonly imageUrl: Prisma.FieldRef<"News", 'String'>
+  readonly imagePublicId: Prisma.FieldRef<"News", 'String'>
   readonly isFeatured: Prisma.FieldRef<"News", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"News", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"News", 'DateTime'>

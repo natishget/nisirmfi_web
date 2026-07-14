@@ -31,6 +31,7 @@ export class NewsService {
         data: {
           ...createNewsDto,
           imageUrl: uploaded.secure_url,
+          imagePublicId: uploaded.public_id,
           publishedDate: new Date(createNewsDto.publishedDate),
         },
       });
@@ -70,10 +71,47 @@ export class NewsService {
     }
   }
 
+  async changeImage(id: string, file: Express.Multer.File) {
+    try {
+      const news = await this.prisma.news.findUnique({ where: { id } });
+      if (!news) {
+        throw new NotFoundException(`News with ID ${id} not found`);
+      }
+
+      // Delete the old image from Cloudinary
+      if (news.imagePublicId) {
+        await this.upload.deleteImage(news.imagePublicId);
+      }
+
+      // Upload the new image to Cloudinary
+      const uploaded = await this.upload.uploadToCloudinary(file);
+
+      // Update the news item with the new image URL and public ID
+      return await this.prisma.news.update({
+        where: { id },
+        data: {
+          imageUrl: uploaded.secure_url,
+          imagePublicId: uploaded.public_id,
+        },
+      });
+    } catch (error: unknown) {
+      this.handlePrismaError(error, 'change news image');
+    }
+  }
+
   async remove(id: string) {
     this.assertValidNewsId(id);
 
     try {
+      const news = await this.prisma.news.findUnique({ where: { id } });
+      if (!news) {
+        throw new NotFoundException(`News with ID ${id} not found`);
+      }
+
+      // Delete the image from Cloudinary
+      if (news.imagePublicId) {
+        await this.upload.deleteImage(news.imagePublicId);
+      }
       return await this.prisma.news.delete({ where: { id } });
     } catch (error: unknown) {
       this.handlePrismaError(error, 'delete news');
