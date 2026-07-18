@@ -1,5 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/state/store";
+import { protectedRouteAsync } from "@/state/api/ApiSlice";
+
 const encoder = new TextEncoder();
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -16,7 +20,7 @@ function getJwtKey() {
 }
 
 export type AuthTokenClaims = {
-  userId: string;
+  id: string;
   email: string;
   fullName: string;
 };
@@ -24,7 +28,7 @@ export type AuthTokenClaims = {
 export async function signAuthToken(claims: AuthTokenClaims) {
   return new SignJWT({ email: claims.email, fullName: claims.fullName })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setSubject(claims.userId)
+    .setSubject(claims.id)
     .setIssuedAt()
     .setIssuer(jwtIssuer)
     .setAudience(jwtAudience)
@@ -32,27 +36,16 @@ export async function signAuthToken(claims: AuthTokenClaims) {
     .sign(getJwtKey());
 }
 
-export async function verifyAuthToken(token: string): Promise<AuthTokenClaims> {
-  const { payload } = await jwtVerify(token, getJwtKey(), {
-    algorithms: ["HS256"],
-    issuer: jwtIssuer,
-    audience: jwtAudience,
-  });
+export const verifyAuthToken = async (): Promise<AuthTokenClaims> => {
+  const dispatch = useDispatch<AppDispatch>();
+  try {
+    const response = await dispatch(protectedRouteAsync()).unwrap();
 
-  const userId = payload.sub;
-  const email = payload.email;
-  const fullName = payload.fullName;
-
-  if (
-    typeof userId !== "string" ||
-    typeof email !== "string" ||
-    typeof fullName !== "string"
-  ) {
-    throw new Error("Invalid token payload");
+    return { response } as unknown as AuthTokenClaims;
+  } catch (error: any) {
+    return error.response?.data?.message || "Token verification failed";
   }
-
-  return { userId, email, fullName };
-}
+};
 
 export function getJwtExpirationSeconds() {
   const overrideValue = Number(process.env.AUTH_COOKIE_MAX_AGE_SECONDS);

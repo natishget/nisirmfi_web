@@ -22,34 +22,13 @@ function isProtectedPage(pathname: string) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = readAuthToken(request);
-  const wantsJson = request.headers.get("accept")?.includes("application/json");
-
-  if (!token) {
-    if (isProtectedPage(pathname)) {
-      return NextResponse.redirect(new URL("/admin-l09in", request.url));
-    }
-
-    return NextResponse.next();
-  }
 
   try {
-    await verifyAuthToken(token);
+    await verifyAuthToken();
 
     return NextResponse.next();
-  } catch {
-    const response = isProtectedPage(pathname)
-      ? NextResponse.redirect(new URL("/admin-l09in", request.url))
-      : wantsJson
-        ? NextResponse.json(
-            { error: "Unauthorized", code: "UNAUTHORIZED" },
-            { status: 401 },
-          )
-        : NextResponse.next();
-
-    response.cookies.delete(AUTH_COOKIE_NAME);
-
-    return response;
+  } catch (error) {
+    return error instanceof Error;
   }
 }
 

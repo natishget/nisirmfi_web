@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Intro } from "./components/ui/intro";
 import Chat from "./components/chatbot/Chat";
+import ReduxProvider from "@/state/provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={` h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        {/* <Intro /> */}
-        <Navbar />
-        <Chat />
-        {children}
-        <Footer />
+        <ReduxProvider>
+          {/* <Intro /> */}
+          <Navbar />
+          <Chat />
+          {children}
+          <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );
