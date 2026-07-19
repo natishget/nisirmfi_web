@@ -30,7 +30,8 @@ export default function TrackApplication() {
     setResult(null);
 
     try {
-      const response = await fetch(`/api/open-account/track?applicationId=${encodeURIComponent(query.trim())}`);
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/open-account/track?applicationId=${encodeURIComponent(query.trim())}`);
       const body = await response.json();
 
       if (!response.ok) {

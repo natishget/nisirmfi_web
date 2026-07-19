@@ -167,14 +167,16 @@ export default function UserManagementClient({
     }
 
     const isEditing = Boolean(editingUser);
+    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
     const response = await fetch(
-      isEditing ? `/api/users/${editingUser?.id}` : "/api/users",
+      isEditing ? `${BASE_URL}/user/${editingUser?.id}` : `${BASE_URL}/user`,
       {
         method: isEditing ? "PATCH" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
+        credentials: "include",
       },
     );
 
@@ -214,8 +216,10 @@ export default function UserManagementClient({
 
     setDeleteError(null);
 
-    const response = await fetch(`/api/users/${deleteTarget.id}`, {
+    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+    const response = await fetch(`${BASE_URL}/user/${deleteTarget.id}`, {
       method: "DELETE",
+      credentials: "include",
     });
 
     if (!response.ok) {

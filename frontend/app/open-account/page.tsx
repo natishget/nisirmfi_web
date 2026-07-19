@@ -88,7 +88,8 @@ export default function Apply() {
         kebele: data.kebele.trim(),
       };
 
-      const response = await fetch("/api/open-account", {
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/open-account`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

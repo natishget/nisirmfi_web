@@ -163,12 +163,13 @@ export default function NewsManagementPage() {
   useEffect(() => {
     async function loadNews() {
       try {
-        const response = await fetch("/api/news?limit=100");
+        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+        const response = await fetch(`${BASE_URL}/news`);
         if (!response.ok) {
           throw new Error("Failed to load news items from server");
         }
         const json = await response.json();
-        const mapped: NewsItem[] = json.data.map((item: any) => ({
+        const mapped: NewsItem[] = json.map((item: any) => ({
           id: item.id,
           title: item.title,
           category: item.category,
@@ -191,40 +192,85 @@ export default function NewsManagementPage() {
   }, []);
 
   const submitNewsItem = async (item: NewsFormState) => {
-    const formData = new FormData();
+    const statusMap: Record<string, string> = {
+      Published: "PUBLISHED",
+      Draft: "DRAFT",
+      Scheduled: "ARCHIVED",
+    };
+    const backendStatus = statusMap[item.status] || "DRAFT";
+    const readTimeNum = parseInt(item.readTime) || 3;
+    const isFeatured = Boolean(item.featured);
 
-    // 1. Append all text and boolean fields
-    formData.append("title", item.title.trim());
-    formData.append("category", item.category);
-    formData.append("status", item.status);
-    formData.append("summary", item.summary.trim());
-    formData.append("author", item.author.trim());
-    formData.append("publishedAt", item.publishedAt);
-    formData.append("readTime", item.readTime.trim() || "3 min read");
-    formData.append("featured", String(item.featured));
+    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+    const isEditing = Boolean(editingItem);
 
-    // 2. Append the file if a new one was uploaded
-    if (item.image) {
-      formData.append("image", item.image); // This is the raw File object
-    } else if (editingItem) {
-      formData.append("existingImageUrl", editingItem.image);
-    }
+    let response;
 
-    const response = await fetch(
-      `${editingItem ? `/api/news/${editingItem.id}` : `/api/news`}`,
-      {
-        method: editingItem ? "PUT" : "POST",
+    if (isEditing) {
+      const textFields = {
+        title: item.title.trim(),
+        category: item.category,
+        status: backendStatus,
+        summary: item.summary.trim(),
+        publishedDate: new Date(item.publishedAt).toISOString(),
+        readTime: readTimeNum,
+        isFeatured,
+      };
+
+      response = await fetch(`${BASE_URL}/news/${editingItem?.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(textFields),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update news details on backend");
+      }
+
+      if (item.image) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", item.image);
+
+        const imageResponse = await fetch(`${BASE_URL}/news/${editingItem?.id}/image`, {
+          method: "PATCH",
+          body: imageFormData,
+          credentials: "include",
+        });
+
+        if (!imageResponse.ok) {
+          throw new Error("Failed to update news image on backend");
+        }
+        response = imageResponse;
+      }
+    } else {
+      const formData = new FormData();
+      formData.append("title", item.title.trim());
+      formData.append("category", item.category);
+      formData.append("status", backendStatus);
+      formData.append("summary", item.summary.trim());
+      formData.append("publishedDate", new Date(item.publishedAt).toISOString());
+      formData.append("readTime", String(readTimeNum));
+      formData.append("isFeatured", String(isFeatured));
+
+      if (item.image) {
+        formData.append("image", item.image);
+      }
+
+      response = await fetch(`${BASE_URL}/news`, {
+        method: "POST",
         body: formData,
-      },
-    );
+        credentials: "include",
+      });
+    }
 
     if (!response.ok) {
       throw new Error("Failed to save news item to server");
     }
-    const json = await response.json();
-    const serverItem = json.data;
+    const serverItem = await response.json();
 
-    // Map backend server item to frontend NewsItem format
     const mappedItem: NewsItem = {
       id: serverItem.id,
       title: serverItem.title,
@@ -363,8 +409,10 @@ export default function NewsManagementPage() {
     if (!deleteTarget) return;
 
     try {
-      const response = await fetch(`/api/news/${deleteTarget.id}`, {
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/news/${deleteTarget.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!response.ok) {

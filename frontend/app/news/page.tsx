@@ -47,12 +47,13 @@ export default function News() {
   useEffect(() => {
     async function loadNews() {
       try {
-        const response = await fetch("/api/news?status=PUBLISHED&limit=100");
+        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+        const response = await fetch(`${BASE_URL}/news?status=PUBLISHED&limit=100`);
         if (!response.ok) {
           throw new Error("Failed to fetch news");
         }
         const json = await response.json();
-        setNewsItems(json.data || []);
+        setNewsItems(json || []);
       } catch (err) {
         console.error("Failed to load news articles:", err);
       } finally {
