@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { AUTH_COOKIE_NAME, readAuthToken } from "@/lib/auth";
-import { verifyAuthToken } from "@/lib/jwt";
-
 const protectedPagePrefixes = [
   "/dashboard",
   "/news-management",
@@ -20,16 +17,16 @@ function isProtectedPage(pathname: string) {
   );
 }
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const token = request.cookies.get("access_token")?.value ?? null;
 
-  try {
-    await verifyAuthToken();
-
-    return NextResponse.next();
-  } catch (error) {
-    return error instanceof Error;
+  if (isProtectedPage(pathname) && !token) {
+    const loginUrl = new URL("/admin-l09in", request.url);
+    return NextResponse.redirect(loginUrl);
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
