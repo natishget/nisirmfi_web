@@ -42,8 +42,17 @@ export class NewsService {
     }
   }
 
-  async findAll() {
-    return await this.prisma.news.findMany();
+  async findAll(status?: string, limit?: string) {
+    const where: any = {};
+    if (status) {
+      where.status = status;
+    }
+    const take = limit ? parseInt(limit, 10) : undefined;
+    return await this.prisma.news.findMany({
+      where,
+      take,
+      orderBy: { publishedDate: 'desc' },
+    });
   }
 
   async findOne(id: string) {

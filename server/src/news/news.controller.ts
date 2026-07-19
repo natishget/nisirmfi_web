@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -34,8 +35,11 @@ export class NewsController {
   }
 
   @Get()
-  findAll() {
-    return this.newsService.findAll();
+  findAll(
+    @Query('status') status?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.newsService.findAll(status, limit);
   }
 
   @UseGuards(JwtAuthGuard)
