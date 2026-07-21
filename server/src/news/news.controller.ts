@@ -37,9 +37,10 @@ export class NewsController {
   @Get()
   findAll(
     @Query('status') status?: string,
-    @Query('limit') limit?: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
   ) {
-    return this.newsService.findAll(status, limit);
+    return this.newsService.findAll(status, +page, +limit);
   }
 
   @UseGuards(JwtAuthGuard)
