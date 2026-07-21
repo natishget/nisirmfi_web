@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
 import CareerDetailView from "@/components/careers/career-detail-view";
-import { listCareers, getCareerById } from "@/lib/services/career.service";
 import { careerIdSchema } from "@/lib/validators/career";
 
 export default async function CareerDetailPage({
@@ -16,26 +15,24 @@ export default async function CareerDetailPage({
     notFound();
   }
 
-  const career = await getCareerById(parsedCareerId.data, {}).catch(() => null);
+  const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
 
-  if (!career) {
+  const careerRes = await fetch(`${BASE_URL}/career/${parsedCareerId.data}`, { cache: "no-store" });
+  if (!careerRes.ok) {
     notFound();
   }
+  const career = await careerRes.json();
 
-  const related = await listCareers({
-    page: 1,
-    limit: 4,
-    activeOnly: true,
-  });
+  const relatedRes = await fetch(`${BASE_URL}/career/active?page=1&limit=4`, { cache: "no-store" });
+  let related = { data: [] };
+  if (relatedRes.ok) {
+    related = await relatedRes.json();
+  }
 
   return (
     <CareerDetailView
-      career={{
-        ...career,
-        postDate: career.postDate.toISOString(),
-        endDate: career.endDate.toISOString(),
-      }}
-      relatedCareers={related.items
+      career={career}
+      relatedCareers={(related.data || [])
         .filter((item: any) => item.id !== parsedCareerId.data)
         .map((item: any) => ({
           id: item.id,
