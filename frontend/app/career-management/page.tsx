@@ -25,7 +25,7 @@ export default async function CareerManagementPage() {
 
   return (
     <CareerManagementClient
-      initialCareers={items.map((career: any) => ({
+      initialCareers={(items.data || []).map((career: any) => ({
         ...career,
         postDate: career.postDate,
         endDate: career.endDate,

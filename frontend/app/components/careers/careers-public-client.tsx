@@ -70,10 +70,10 @@ export default function CareersPublicClient() {
           throw new Error("Unable to load careers");
         }
 
-        const payload = (await response.json()) as CareerCard[];
+        const payload = (await response.json()) as any;
 
         if (active) {
-          setCareers(payload);
+          setCareers(payload.data || []);
         }
       } catch (loadError) {
         if (active) {

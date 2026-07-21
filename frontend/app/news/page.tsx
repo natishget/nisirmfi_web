@@ -53,7 +53,7 @@ export default function News() {
           throw new Error("Failed to fetch news");
         }
         const json = await response.json();
-        setNewsItems(json || []);
+        setNewsItems(json.data || []);
       } catch (err) {
         console.error("Failed to load news articles:", err);
       } finally {
