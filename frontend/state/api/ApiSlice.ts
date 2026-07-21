@@ -1,210 +1,187 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import api from "@/lib/api";
-import { RootState } from "../store";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface ApiState {
-  registerResponse: RegisterResponse;
-  loginResponse: LoginResponse;
-  News: News[];
-  Career: Career[];
-  loading: boolean;
-  error: string | null;
-  user: User | null;
-  initialized?: boolean;
-  pageMeta: { totalItems: number; page: number; totalPages: number };
+export interface User {
+  userId: string;
+  email: string;
+  fullName: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface RegisterResponse {
-  message: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  error?: string;
-}
-
-interface LoginResponse {
+export interface AuthResponse {
   message?: string;
   error?: string;
   access_token?: string;
+  user?: User;
 }
 
-interface User {
-  userId: String;
-  email: String;
-  fullName: String;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface News {
-  id: String;
-  title: String;
-  category: String;
-  status: String;
-  summary: String;
-  publishedDate: Date;
+export interface News {
+  id: string;
+  title: string;
+  category: string;
+  status: string;
+  summary: string;
+  publishedDate: string;
   readTime: number;
-  imageUrl: String;
-  isFeatured: Boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  imageUrl: string;
+  isFeatured: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface Career {
-  id: String;
-  title: String;
-  description: String;
-  department: String;
-  type: String;
-  purpose: String;
-  requirements: String;
-  location: String;
-  status: String;
-  createdAt: Date;
-  updatedAt: Date;
+export interface Career {
+  id: string;
+  title: string;
+  description: string;
+  department: string;
+  type: string;
+  purpose: string;
+  requirements: string;
+  location: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const initialState: ApiState = {
-  registerResponse: { message: "", user: { id: "", name: "", email: "" } },
-  loginResponse: { message: "", error: "", access_token: "" },
-  News: [],
-  Career: [],
-  loading: false,
-  error: null,
-  user: null,
-  initialized: false,
-  pageMeta: { totalItems: 0, page: 1, totalPages: 1 },
-};
+export interface PaginatedResponse<T> {
+  data: T[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
 
-export const loginAsync = createAsyncThunk<
-  LoginResponse,
-  { email: string; password: string },
-  { rejectValue: string; dispatch: any }
->("auth/login", async (credentials, { rejectWithValue, dispatch }) => {
-  try {
-    const response = await api.post("/auth/login", credentials);
-    dispatch(protectedRouteAsync());
-    return response.data as LoginResponse;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || "Login failed");
-  }
+const baseQuery = fetchBaseQuery({
+  baseUrl: process.env.NEXT_PUBLIC_IS_PRODUCTION === "true"
+    ? process.env.NEXT_PUBLIC_BACKEND_API
+    : process.env.NEXT_PUBLIC_LOCAL_API || "",
+  credentials: "include",
 });
 
-export const protectedRouteAsync = createAsyncThunk<
-  User,
-  void,
-  { rejectValue: string }
->("protectedRouteAsync", async (_, { rejectWithValue }) => {
-  try {
-    const response = await api.get("/auth/protected", {
-      withCredentials: true,
-    });
-    return response.data as User;
-  } catch (error: any) {
-    return rejectWithValue(
-      error.response?.data?.message || "Failed to access protected route",
-    );
-  }
+export const apiSlice = createApi({
+  reducerPath: "api",
+  baseQuery: baseQuery,
+  tagTypes: ["News", "Career", "Auth"],
+  endpoints: (builder) => ({
+    login: builder.mutation<AuthResponse, { email: string; password: string }>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    register: builder.mutation<AuthResponse, any>({
+      query: (data) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    getProtectedUser: builder.query<User, void>({
+      query: () => "/auth/protected",
+      providesTags: ["Auth"],
+    }),
+
+    // News Endpoints
+    getNews: builder.query<PaginatedResponse<News>, { page?: number; limit?: number; isAdmin?: boolean }>({
+      query: (params) => ({
+        url: "/news",
+        params,
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: "News" as const, id })),
+              { type: "News", id: "LIST" },
+            ]
+          : [{ type: "News", id: "LIST" }],
+    }),
+    createNews: builder.mutation<News, Partial<News>>({
+      query: (body) => ({
+        url: "/news",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "News", id: "LIST" }],
+    }),
+    updateNews: builder.mutation<News, { id: string; body: Partial<News> }>({
+      query: ({ id, body }) => ({
+        url: `/news/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "News", id }, { type: "News", id: "LIST" }],
+    }),
+    deleteNews: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/news/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "News", id }, { type: "News", id: "LIST" }],
+    }),
+
+    // Career Endpoints
+    getCareers: builder.query<PaginatedResponse<Career>, { page?: number; limit?: number; isAdmin?: boolean }>({
+      query: (params) => ({
+        url: "/career",
+        params,
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: "Career" as const, id })),
+              { type: "Career", id: "LIST" },
+            ]
+          : [{ type: "Career", id: "LIST" }],
+    }),
+    createCareer: builder.mutation<Career, Partial<Career>>({
+      query: (body) => ({
+        url: "/career",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Career", id: "LIST" }],
+    }),
+    updateCareer: builder.mutation<Career, { id: string; body: Partial<Career> }>({
+      query: ({ id, body }) => ({
+        url: `/career/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Career", id }, { type: "Career", id: "LIST" }],
+    }),
+    deleteCareer: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/career/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Career", id }, { type: "Career", id: "LIST" }],
+    }),
+  }),
 });
 
-export const logoutAsync = createAsyncThunk<
-  void,
-  void,
-  { rejectValue: string }
->("logoutAsync", async (_, { rejectWithValue, dispatch }) => {
-  try {
-    await api.post("/auth/logout", { withCredentials: true });
-    dispatch(clearUser()); // clear user immediately
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || "Logout failed");
-  }
-});
-
-export const registerAsync = createAsyncThunk<
-  RegisterResponse,
-  object,
-  { rejectValue: string }
->("registerAsync", async (data, { rejectWithValue }) => {
-  try {
-    const registerResponse = await api.post("/auth/register", data, {
-      withCredentials: true,
-    });
-    console.log("api", api);
-    return registerResponse.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || "Register failed");
-  }
-});
-
-const ApiSlice = createSlice({
-  name: "api",
-  initialState,
-  reducers: {
-    setUser(state, action: PayloadAction<User>) {
-      state.user = action.payload;
-    },
-    clearUser(state) {
-      state.user = null;
-    },
-    clearError(state) {
-      state.error = null;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      //login
-      .addCase(loginAsync.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        state.loginResponse = action.payload;
-      })
-      .addCase(loginAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload || action.error.message || "something went wrong";
-      })
-
-      //logout
-      .addCase(logoutAsync.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(logoutAsync.fulfilled, (state) => {
-        state.loading = false;
-        state.user = null;
-        state.initialized = true;
-      })
-      .addCase(logoutAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload || action.error.message || "something went wrong";
-      })
-
-      // register
-      .addCase(registerAsync.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        state.registerResponse = action.payload;
-      })
-      .addCase(registerAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.payload || action.error.message || "something went wrong";
-      });
-  },
-});
-
-export const { setUser, clearUser, clearError } = ApiSlice.actions;
-export default ApiSlice.reducer;
-
-// selector helper (use in components to read user)
-export const selectUser = (state: any) => state.api.user;
-export const selectIsAuthenticated = (state: any) => !!state.api.user;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useLogoutMutation,
+  useGetProtectedUserQuery,
+  useGetNewsQuery,
+  useCreateNewsMutation,
+  useUpdateNewsMutation,
+  useDeleteNewsMutation,
+  useGetCareersQuery,
+  useCreateCareerMutation,
+  useUpdateCareerMutation,
+  useDeleteCareerMutation,
+} = apiSlice;

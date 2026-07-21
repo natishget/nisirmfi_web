@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import counterReducer from "./API/counterSlice";
-import apiReducer from "./api/ApiSlice";
+import { apiSlice } from "./api/ApiSlice";
 
 export const store = configureStore({
   reducer: {
-    api: apiReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
