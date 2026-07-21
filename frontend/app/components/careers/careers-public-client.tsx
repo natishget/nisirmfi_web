@@ -60,22 +60,20 @@ export default function CareersPublicClient() {
 
     async function loadCareers() {
       try {
-        const response = await fetch("/api/careers?limit=100", {
+        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+        const response = await fetch(`${BASE_URL}/career/active`, {
           method: "GET",
           cache: "no-store",
         });
 
-        const payload = (await response.json()) as {
-          data?: CareerCard[];
-          error?: string;
-        };
-
         if (!response.ok) {
-          throw new Error(payload.error ?? "Unable to load careers");
+          throw new Error("Unable to load careers");
         }
 
+        const payload = (await response.json()) as any;
+
         if (active) {
-          setCareers(payload.data ?? []);
+          setCareers(payload.data || []);
         }
       } catch (loadError) {
         if (active) {

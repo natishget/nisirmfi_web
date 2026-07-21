@@ -12,19 +12,48 @@ export class CareerService {
     return await this.prisma.career.create({ data: createCareerDto });
   }
 
-  async findAll() {
-    return await this.prisma.career.findMany();
+  async findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.career.findMany({ skip, take: limit }),
+      this.prisma.career.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
   }
 
-  async findAllActive() {
+  async findAllActive(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
     const currentDate = new Date();
-    return await this.prisma.career.findMany({
-      where: {
-        endDate: {
-          gte: currentDate,
-        },
-      },
-    });
+    const where = {
+      postDate: { lte: currentDate },
+      endDate: { gte: currentDate },
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.career.findMany({ where, skip, take: limit }),
+      this.prisma.career.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
   }
 
   async findOne(id: string) {

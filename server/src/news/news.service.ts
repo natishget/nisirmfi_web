@@ -42,8 +42,33 @@ export class NewsService {
     }
   }
 
-  async findAll() {
-    return await this.prisma.news.findMany();
+  async findAll(status?: string, page: number = 1, limit: number = 10) {
+    const where: any = {};
+    if (status) {
+      where.status = status;
+    }
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.news.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { publishedDate: 'desc' },
+      }),
+      this.prisma.news.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
   }
 
   async findOne(id: string) {

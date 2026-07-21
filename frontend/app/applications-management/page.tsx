@@ -122,7 +122,10 @@ export default function ApplicationsManagement() {
         queryParams.append("status", statusFilter);
       }
 
-      const response = await fetch(`/api/open-account?${queryParams.toString()}`);
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/open-account?${queryParams.toString()}`, {
+        credentials: "include",
+      });
       const body = await response.json();
 
       if (!response.ok) {
@@ -178,13 +181,15 @@ export default function ApplicationsManagement() {
     setUpdatingStatus(true);
 
     try {
-      const response = await fetch(`/api/open-account/${selectedApp.id}`, {
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/open-account/${selectedApp.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: newStatus,
           statusNotes: statusNotes.trim() || null,
         }),
+        credentials: "include",
       });
 
       const body = await response.json();
@@ -217,8 +222,10 @@ export default function ApplicationsManagement() {
     setDeleting(true);
 
     try {
-      const response = await fetch(`/api/open-account/${deleteTarget.id}`, {
+      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${BASE_URL}/open-account/${deleteTarget.id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!response.ok) {

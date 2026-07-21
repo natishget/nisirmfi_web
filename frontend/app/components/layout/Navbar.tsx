@@ -1,22 +1,26 @@
 import { cookies } from "next/headers";
-
-import { AUTH_COOKIE_NAME } from "@/services/auth";
-import { verifyAuthToken } from "@/utils/jwt";
-
 import NavbarClient from "./NavbarClient";
 
 export default async function Navbar() {
-  // Keep auth detection on the server so the shared shell stays lightweight.
   const cookieStore = await cookies();
-  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? null;
+  const token = cookieStore.get("access_token")?.value ?? null;
 
   let isAuthenticated = false;
 
   if (token) {
     try {
-      await verifyAuthToken(token);
-      isAuthenticated = true;
-    } catch {
+      const backendUrl = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+      const response = await fetch(`${backendUrl}/auth/protected`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+      });
+      if (response.ok) {
+        isAuthenticated = true;
+      }
+    } catch (e) {
+      console.error("Navbar auth check failed:", e);
       isAuthenticated = false;
     }
   }

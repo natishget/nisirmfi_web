@@ -13,7 +13,27 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto, LoginAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtAuthGuard } from './guards/jwt_auth.guard';
-import { parse } from 'path';
+
+function parseCookieMaxAgeMs(raw: string | undefined): number {
+  if (!raw) return 60 * 60 * 1000;
+
+  const value = raw.trim().toLowerCase();
+  if (/^\d+$/.test(value)) return Number(value);
+
+  const match = value.match(/^(\d+)(ms|s|m|h|d)$/);
+  if (!match) return 60 * 60 * 1000;
+
+  const amount = Number(match[1]);
+  const unit = match[2];
+  const multipliers: Record<string, number> = {
+    ms: 1,
+    s: 1000,
+    m: 60 * 1000,
+    h: 60 * 60 * 1000,
+    d: 24 * 60 * 60 * 1000,
+  };
+  return amount * multipliers[unit];
+}
 
 interface AuthenticatedRequest extends Request {
   user: any; // replace `any` with your user type if available
@@ -37,11 +57,14 @@ export class AuthController {
       loginAuthDto.email,
       loginAuthDto.password,
     );
+    const isProduction = process.env.IS_PRODUCTION === 'true';
+
     res.cookie('access_token', access_token, {
       httpOnly: true,
-      secure: process.env.IS_PRODUCTION === 'true', // set to true in production (HTTPS)
-      sameSite: process.env.IS_PRODUCTION === 'true' ? 'none' : 'lax', // 'none' needed for cross-site XHR; production requires secure:true
-      maxAge: parseInt(process.env.JWT_EXPIRATION_MS || '6h'), // default to 1 hour
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      path: '/',
+      maxAge: parseCookieMaxAgeMs(process.env.JWT_EXPIRATION_MS),
     });
     return { message, access_token };
   }
@@ -56,7 +79,14 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token');
+    const isProduction = process.env.IS_PRODUCTION === 'true';
+
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      path: '/',
+    });
     return { message: 'Logged out successfully' };
   }
 

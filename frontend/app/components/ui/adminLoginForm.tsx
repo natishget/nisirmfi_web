@@ -8,16 +8,20 @@ import { useForm } from "react-hook-form";
 
 import { authLoginSchema, type AuthLoginInput } from "@/lib/validators/auth";
 
+// redux
+import { useLoginMutation } from "@/state/api/ApiSlice";
+
 type LoginFormValues = AuthLoginInput;
 
 export default function AdminLoginForm() {
+  const [login, { isLoading: isSubmitting }] = useLoginMutation();
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(authLoginSchema),
     defaultValues: {
@@ -28,27 +32,15 @@ export default function AdminLoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setSubmitError(null);
-
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const payload = (await response.json()) as {
-      error?: string;
-      message?: string;
-    };
-
-    if (!response.ok) {
-      setSubmitError(payload.error ?? "Unable to sign in");
+    try {
+      const response = await login(data).unwrap();
+      console.log("response", response);
+      router.replace("/dashboard");
+      router.refresh();
+    } catch (error: any) {
+      setSubmitError(error?.data?.message ?? "Unable to sign in");
       return;
     }
-
-    router.replace("/dashboard");
-    router.refresh();
   };
 
   return (

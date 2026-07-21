@@ -269,12 +269,14 @@ export default function CareerManagementClient({
   const submitCareer = async (values: ManagementFormValues) => {
     const payload = toPayload(values);
     const isEditing = Boolean(editingCareer);
+    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
     const response = await fetch(
-      isEditing ? `/api/careers/${editingCareer?.id}` : "/api/careers",
+      isEditing ? `${BASE_URL}/career/${editingCareer?.id}` : `${BASE_URL}/career`,
       {
         method: isEditing ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        credentials: "include",
       },
     );
 
@@ -315,8 +317,10 @@ export default function CareerManagementClient({
     }
 
     setDeleteError(null);
-    const response = await fetch(`/api/careers/${deleteTarget.id}`, {
+    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
+    const response = await fetch(`${BASE_URL}/career/${deleteTarget.id}`, {
       method: "DELETE",
+      credentials: "include",
     });
 
     if (!response.ok) {
