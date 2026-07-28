@@ -8,3 +8,5 @@ recommended additional package
 pip install pydantic-settings python-multipart
 
 (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& "c:\Users\Natenael_G\Desktop\nisirmfi_web\backend\.venv\Scripts\Activate.ps1")
+
+ingestion command python scratch/run_ingestion.py
