@@ -1,3 +1,5 @@
+import logging
+
 from app.rag.embeddings import generate_embedding
 from app.rag.ingestion_service import ingest_documents
 from app.rag.rag_service import retrieve_context
@@ -24,6 +26,8 @@ from app.services.chat_service import process_user_message
 from app.services.message_service import save_message
 from app.models.message import MessageRole
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
 
 
@@ -44,8 +48,7 @@ async def chat(
             detail="Too many requests. Please try again later."
         )
 
-    print("message", request.message)
-    print("conversation", request.conversation_id)
+    logger.info(f"Chat request — conversation: {request.conversation_id}")
 
     
     result = await process_user_message(
@@ -122,9 +125,10 @@ async def test_search(
 #         "message_id": str(message.id)
 #     }
 
-# @router.post("/reindex")
-# async def reindex(
-#     db: AsyncSession = Depends(get_db)
-# ):
-#     return await ingest_documents(db)
+@router.post("/reindex")
+async def reindex(
+    db: AsyncSession = Depends(get_db)
+):
+    return await ingest_documents(db)
+
 

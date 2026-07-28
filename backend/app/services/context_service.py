@@ -1,3 +1,5 @@
+import logging
+
 from app.services.career_service import (
     get_active_careers
 )
@@ -10,13 +12,15 @@ from app.services.intent_service import (
     Intent
 )
 
+logger = logging.getLogger(__name__)
+
 
 async def build_company_context(db, intent: Intent):
 
     context = []
 
     if intent == Intent.CAREER:
-        print("Intent is Career built:.............................................................................................................................................................................................................")
+        logger.debug("Building career context")
         careers = await get_active_careers(db)
         context.append("CAREERS:")
 
@@ -26,7 +30,7 @@ async def build_company_context(db, intent: Intent):
                 f"- {career.title} ({career.location})"
             )
     elif intent == Intent.NEWS:
-        print("Intent is News built:.............................................................................................................................................................................................................")
+        logger.debug("Building news context")
         news = await get_active_news(db)
         context.append("LATEST NEWS:")
 
