@@ -48,11 +48,13 @@ export default function Footer() {
             <div className="flex flex-col gap-3 text-sm text-gray-700">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 mt-0.5  shrink-0" />
-                <span>Bole Sub-city, Addis Ababa, Ethiopia</span>
+                <span>Bole Rwanda to Atlas Road Nisir Bldg, Addis Ababa, Ethiopia</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4  shrink-0" />
-                <span>+251 116 39 13 38</span>
+                <span>9404</span><br />
+                <span>+251 115 622 225</span><br />
+                <span>+251 115 622 371</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4  shrink-0" />
@@ -60,7 +62,7 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 mt-0.5 shrink-0" />
-                <span>Mon–Fri 8:30–17:30 &nbsp;|&nbsp; Sat 9:00–13:00</span>
+                <span>Mon–Sat 8:30–11:00</span>
               </div>
             </div>
           </div>

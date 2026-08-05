@@ -136,11 +136,11 @@ export default function NavbarClient({
                 <img src="../Logo only.png" alt="Nisir MFI logo" />
               </div>
               <div>
-                <div className="font-bold text-base leading-tight tracking-tight transition-colors text-[#22348A]">
+                <div className="font-bold text-base leading-tight tracking-tight transition-colors text-[#22348A] text-[18px]">
                   ንስር ማይክሮፋይናንስ
                 </div>
-                <div className="text-[10px] leading-tight tracking-wider uppercase transition-colors text-gray-400">
-                  Nisir Microfinance Institution
+                <div className="text-[13px] leading-tight tracking-wider uppercase transition-colors text-gray-400">
+                  Nisir Microfinance
                 </div>
               </div>
             </div>
@@ -219,18 +219,18 @@ export default function NavbarClient({
           </div>
 
           <div className="hidden lg:flex gap-3">
-            <Link href="/apply">
+            {/* <Link href="/apply">
               <div
                 data-testid="link-apply-nav"
                 className="text-sm font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer bg-[#22348A] text-white hover:bg-[#162260]"
               >
                 Apply for a Loan
               </div>
-            </Link>
+            </Link> */}
             <Link href="/open-account">
               <div
                 data-testid="link-open-nav"
-                className="text-sm font-semibold px-5 py-2.5 rounded-full  transition-all cursor-pointer border border-[#22348A] text-[#22348A] hover:border-[#22348A] hover:text-[#162260]"
+                className="text-sm font-semibold px-5 py-2.5 rounded-full  transition-all cursor-pointer bg-[#22348A] text-white hover:bg-[#162260]"
               >
                 Open Account
               </div>

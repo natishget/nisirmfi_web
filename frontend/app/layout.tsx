@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { Intro } from "./components/ui/intro";
 import Chat from "./components/chatbot/Chat";
 import ReduxProvider from "@/state/provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Chat />
           {children}
           <Footer />
+          <Toaster />
         </ReduxProvider>
       </body>
     </html>
