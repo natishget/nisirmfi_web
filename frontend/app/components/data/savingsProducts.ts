@@ -10,9 +10,10 @@ export interface SavingsProduct {
 }
 
 export const savingsProducts: SavingsProduct[] = [
-  { id: "regular", title: "Regular Savings", tagline: "Your daily savings, growing steadily", benefits: ["Earn up to 4% p.a.", "Zero minimum balance", "Instant withdrawals"], rate: "4%", bgClass: "bg-white", accentHex: "#22348A", textClass: "text-[#22348A]" },
-  { id: "fixed", title: "Fixed Savings", tagline: "Lock in guaranteed returns", benefits: ["Industry-leading 7.5% p.a.", "Flexible tenures 6M–5Y", "Premature withdrawal option"], rate: "7.5%", bgClass: "bg-[#22348A]", accentHex: "#FFFFFF", textClass: "text-white" },
-  { id: "children", title: "Children's Savings", tagline: "Secure their tomorrow, today", benefits: ["Bonus 0.5% interest rate", "Educational expense benefits", "Financial literacy modules"], rate: "4.5%", bgClass: "bg-[#f0f2fa]", accentHex: "#22348A", textClass: "text-[#22348A]" },
-  { id: "women", title: "Women's Savings", tagline: "Designed for her financial independence", benefits: ["Exclusive loan discounts", "Free healthcare consultations", "Zero processing fees"], rate: "5%", bgClass: "bg-white", accentHex: "#22348A", textClass: "text-[#22348A]" },
-  { id: "retirement", title: "Retirement Savings", tagline: "Retire with dignity and comfort", benefits: ["Highest interest tier at 8.2%", "Monthly payout options", "Tax-free maturity amounts"], rate: "8.2%", bgClass: "bg-[#22348A]", accentHex: "#FFFFFF", textClass: "text-white" },
+  { id: "regular", title: "Regular Savings", tagline: "Your daily savings, growing steadily", benefits: ["Interest rate of 10%", "500 Minimum Balance", "Instant withdrawals"], rate: "10%", bgClass: "bg-white", accentHex: "#22348A", textClass: "text-[#22348A]" },
+  { id: "fixed", title: "Fixed Time Deposit", tagline: "Lock in guaranteed returns", benefits: ["Rate Starting From 12%", "Flexible tenures 6 Months-1 Year", "Premature withdrawal option"], rate: "12 - 20%", bgClass: "bg-[#22348A]", accentHex: "#FFFFFF", textClass: "text-white" },
+  { id: "children", title: "Child Savings 'Maleda'", tagline: "Secure their tomorrow, today", benefits: ["11% interest rate"], rate: "11%", bgClass: "bg-[#f0f2fa]", accentHex: "#22348A", textClass: "text-[#22348A]" },
+  { id: "women", title: "Women's Savings 'Alem'", tagline: "Designed for her financial independence", benefits: ["11% interest rate"], rate: "11%", bgClass: "bg-white", accentHex: "#22348A", textClass: "text-[#22348A]" },
+  { id: "retirement", title: "Elderly Savings 'Efoy'", tagline: "Retire with dignity and comfort", benefits: ["11% interest rate"], rate: "11%", bgClass: "bg-[#22348A]", accentHex: "#FFFFFF", textClass: "text-white" },
+  { id: "disablity", title: "Disablity Savings 'Yichalal'", tagline: "Retire with dignity and comfort", benefits: ["11% interest rate"], rate: "11%", bgClass: "bg-[#f0f2fa]", accentHex: "#22348A", textClass: "text-[#22348A]" },
 ];
