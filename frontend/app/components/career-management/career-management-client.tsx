@@ -172,14 +172,16 @@ function getStatus(career: CareerRecord, nowTime: number) {
   return "Active";
 }
 
-export default function CareerManagementClient({
-  initialCareers,
-}: {
-  initialCareers: CareerRecord[];
-}) {
+import {
+  useGetCareersQuery,
+  useCreateCareerMutation,
+  useUpdateCareerMutation,
+  useDeleteCareerMutation,
+} from "@/state/api/ApiSlice";
+
+export default function CareerManagementClient() {
   const nowTime = Date.now();
   const router = useRouter();
-  const [careers, setCareers] = useState(initialCareers);
   const [search, setSearch] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("All");
   const [editorOpen, setEditorOpen] = useState(false);
@@ -266,49 +268,53 @@ export default function CareerManagementClient({
     setSubmitError(null);
   };
 
+  const { data: careersQueryData, isLoading: isCareersLoading } = useGetCareersQuery({});
+  const [createCareer] = useCreateCareerMutation();
+  const [updateCareer] = useUpdateCareerMutation();
+  const [deleteCareer] = useDeleteCareerMutation();
+
+  const careers = useMemo(() => {
+    if (!careersQueryData?.data) return [];
+    return careersQueryData.data.map((c: any) => ({
+      id: c.id,
+      title: c.title,
+      department: c.department,
+      location: c.location,
+      type: c.type,
+      purpose: c.purpose,
+      responsibilities: Array.isArray(c.requirements) ? c.requirements : (c.requirements ? c.requirements.split("\n") : []),
+      qualification: Array.isArray(c.description) ? c.description : (c.description ? c.description.split("\n") : []),
+      salary: "Negotiable",
+      benefits: [],
+      postDate: c.createdAt ? c.createdAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
+      endDate: c.updatedAt ? c.updatedAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
+    }));
+  }, [careersQueryData]);
+
   const submitCareer = async (values: ManagementFormValues) => {
-    const payload = toPayload(values);
-    const isEditing = Boolean(editingCareer);
-    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-    const response = await fetch(
-      isEditing ? `${BASE_URL}/career/${editingCareer?.id}` : `${BASE_URL}/career`,
-      {
-        method: isEditing ? "PATCH" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      },
-    );
-
-    const responseBody = (await response.json().catch(() => ({}))) as {
-      data?: CareerRecord;
-      error?: string;
+    const payload = {
+      title: values.title.trim(),
+      department: values.department.trim(),
+      location: values.location.trim(),
+      type: values.type.trim(),
+      purpose: values.purpose.trim(),
+      requirements: values.responsibilities.trim(),
+      description: values.qualification.trim(),
+      status: "ACTIVE",
     };
+    const isEditing = Boolean(editingCareer);
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        router.replace("/admin-l09in");
-        return;
+    try {
+      if (isEditing && editingCareer) {
+        await updateCareer({ id: editingCareer.id, body: payload }).unwrap();
+      } else {
+        await createCareer(payload).unwrap();
       }
-
-      setSubmitError(responseBody.error ?? "Unable to save career posting");
-      return;
+      closeEditor();
+      reset(defaultFormValues);
+    } catch (err: any) {
+      setSubmitError(err?.data?.message || "Unable to save career posting");
     }
-
-    const savedCareer = responseBody.data;
-
-    if (savedCareer) {
-      setCareers((current) =>
-        isEditing
-          ? current.map((career) =>
-              career.id === savedCareer.id ? savedCareer : career,
-            )
-          : [savedCareer, ...current],
-      );
-    }
-
-    closeEditor();
-    reset(defaultFormValues);
   };
 
   const confirmDelete = async () => {
@@ -317,30 +323,12 @@ export default function CareerManagementClient({
     }
 
     setDeleteError(null);
-    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-    const response = await fetch(`${BASE_URL}/career/${deleteTarget.id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        router.replace("/admin-l09in");
-        return;
-      }
-
-      const body = (await response.json().catch(() => ({}))) as {
-        error?: string;
-      };
-
-      setDeleteError(body.error ?? "Unable to delete career posting");
-      return;
+    try {
+      await deleteCareer(deleteTarget.id).unwrap();
+      setDeleteTarget(null);
+    } catch (err: any) {
+      setDeleteError(err?.data?.message || "Unable to delete career posting");
     }
-
-    setCareers((current) =>
-      current.filter((career) => career.id !== deleteTarget.id),
-    );
-    setDeleteTarget(null);
   };
 
   return (

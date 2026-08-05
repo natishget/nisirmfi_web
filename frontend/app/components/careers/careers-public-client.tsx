@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -50,52 +50,24 @@ function excerpt(text: string, length = 70) {
   return text.length > length ? text.substring(0, length) + "..." : text;
 }
 
+import { useGetActiveCareersQuery } from "@/state/api/ApiSlice";
+
 export default function CareersPublicClient() {
-  const [careers, setCareers] = useState<CareerCard[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error: queryError } = useGetActiveCareersQuery({});
+  const careers = useMemo(() => {
+    return (data?.data || []).map((c: any) => ({
+      id: c.id,
+      title: c.title,
+      department: c.department,
+      location: c.location,
+      type: c.type,
+      purpose: c.purpose,
+      postDate: c.createdAt,
+      endDate: c.updatedAt,
+    }));
+  }, [data]);
 
-  useEffect(() => {
-    let active = true;
-
-    async function loadCareers() {
-      try {
-        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-        const response = await fetch(`${BASE_URL}/career/active`, {
-          method: "GET",
-          cache: "no-store",
-        });
-
-        if (!response.ok) {
-          throw new Error("Unable to load careers");
-        }
-
-        const payload = (await response.json()) as any;
-
-        if (active) {
-          setCareers(payload.data || []);
-        }
-      } catch (loadError) {
-        if (active) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : "Unable to load careers",
-          );
-        }
-      } finally {
-        if (active) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    void loadCareers();
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const error = queryError ? "Unable to load careers" : null;
 
   const openingCount = useMemo(() => careers.length, [careers]);
 
