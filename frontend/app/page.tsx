@@ -43,37 +43,37 @@ const heroSlides: {
   kenTo: TargetAndTransition;
   transition: TransitionType;
 }[] = [
-  {
-    src: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?auto=format&fit=crop&w=1600&q=85",
-    kenFrom: { scale: 1.1, x: "2%" },
-    kenTo: { scale: 1, x: "0%" },
-    transition: "fade",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1600&q=80",
-    kenFrom: { scale: 1, x: "0%" },
-    kenTo: { scale: 1.08, x: "-2%" },
-    transition: "slideRight",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1600&q=80",
-    kenFrom: { scale: 1.12, y: "-1.5%" },
-    kenTo: { scale: 1, y: "1%" },
-    transition: "zoomIn",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=80",
-    kenFrom: { scale: 1, y: "1%" },
-    kenTo: { scale: 1.07, y: "-1%" },
-    transition: "fade",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1600&q=80",
-    kenFrom: { scale: 1.06, x: "-1.5%", y: "1%" },
-    kenTo: { scale: 1, x: "1%", y: "-1%" },
-    transition: "slideRight",
-  },
-];
+    {
+      src: "../about.png",
+      kenFrom: { scale: 1.1, x: "2%" },
+      kenTo: { scale: 1, x: "0%" },
+      transition: "fade",
+    },
+    {
+      src: "../buildingNisir.png",
+      kenFrom: { scale: 1, x: "0%" },
+      kenTo: { scale: 1.08, x: "-2%" },
+      transition: "slideRight",
+    },
+    {
+      src: "../nisir.png",
+      kenFrom: { scale: 1.12, y: "-1.5%" },
+      kenTo: { scale: 1, y: "1%" },
+      transition: "zoomIn",
+    },
+    {
+      src: "../Nisir Night.png",
+      kenFrom: { scale: 1, y: "1%" },
+      kenTo: { scale: 1.07, y: "-1%" },
+      transition: "fade",
+    },
+    {
+      src: "../customer.png",
+      kenFrom: { scale: 1.06, x: "-1.5%", y: "1%" },
+      kenTo: { scale: 1, x: "1%", y: "-1%" },
+      transition: "slideRight",
+    },
+  ];
 const slideVariants: Record<
   TransitionType,
   {
@@ -335,7 +335,7 @@ export default function Home() {
               className="max-w-3xl flex flex-col"
             >
               {/* Trust badge */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -345,7 +345,7 @@ export default function Home() {
                 <span className="text-white/80 text-xs font-medium tracking-wide">
                   A Treasure For All!
                 </span>
-              </motion.div>
+              </motion.div> */}
 
               {/* Headline — word by word */}
               <h1 className="display-text text-white text-5xl sm:text-6xl lg:text-7xl leading-[1.08] mb-4">
@@ -443,9 +443,9 @@ export default function Home() {
                 transition={{ delay: 1.2, duration: 0.6 }}
                 className="grid grid-cols-3 gap-6 pt-8 border-t border-white/15 max-w-lg"
               >
-                <StatPill num={20000} suffix="+" label="Active Customers" />
-                <StatPill num={10} suffix="+" label="Years of Service" />
-                <StatPill num={20} suffix="+" label="Branch Offices" />
+                <StatPill num={45000} suffix="+" label="Active Customers" />
+                <StatPill num={12} suffix="+" label="Years of Service" />
+                <StatPill num={23} suffix="+" label="Branch Offices" />
               </motion.div>
             </motion.div>
           </div>

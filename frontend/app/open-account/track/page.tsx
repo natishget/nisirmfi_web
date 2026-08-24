@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Loader2, ArrowLeft, Clock, Eye, AlertCircle, CheckCircle2, XCircle, Info } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useLazyTrackOpenAccountQuery } from "@/state/api/ApiSlice";
 
 type TrackingData = {
   applicationId: string;
@@ -21,6 +22,8 @@ export default function TrackApplication() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const [trackOpenAccount] = useLazyTrackOpenAccountQuery();
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -30,21 +33,15 @@ export default function TrackApplication() {
     setResult(null);
 
     try {
-      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-      const response = await fetch(`${BASE_URL}/open-account/track?applicationId=${encodeURIComponent(query.trim())}`);
-      const body = await response.json();
-
-      if (!response.ok) {
-        throw new Error(body.error ?? "Application not found");
-      }
-
-      setResult(body.data);
+      const result = await trackOpenAccount(query.trim()).unwrap();
+      setResult(result.data);
     } catch (err: any) {
-      setError(err.message ?? "Something went wrong.");
+      const errMsg = err?.data?.message || err.message || "No application matches that Reference ID.";
+      setError(errMsg);
       toast({
         variant: "destructive",
         title: "Track failed",
-        description: err.message ?? "No application matches that Reference ID.",
+        description: errMsg,
       });
     } finally {
       setLoading(false);

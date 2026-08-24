@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 const IMG = {
-  hero: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1400&q=80",
+  hero: "../about.png",
   mission: "../Nisir Building 1.png",
   community: "../other/coin tree.jpg",
   team: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
@@ -13,29 +13,29 @@ const IMG = {
 
 const values = [
   {
-    title: "Integrity",
-    desc: "We operate with transparency and ethical conduct in everything we do, earning trust through consistent, honest action.",
+    title: "We Live our promises to customers",
+    desc: "We are committed to delivering on every promise we make by providing reliable, transparent, and customer-focused services. ",
   },
   {
-    title: "Ambition",
-    desc: "We set bold goals for our institution and for the customers we serve, pursuing excellence without compromise.",
+    title: "We are a memeber of the one `Nisir` Family",
+    desc: "We work together with unity, respect, and shared purpose to achieve our common goals as one Nisir family.",
   },
   {
-    title: "Collaboration",
-    desc: "We build partnerships with customers, communities, and each other — believing shared effort creates lasting impact.",
+    title: "We Continously learn, evelove and Adapt",
+    desc: "We embrace continuous learning, innovation, and adaptability to improve our performance and meet the changing needs of our customers and the industry.",
   },
   {
-    title: "Customer-centricity",
-    desc: "Every decision begins and ends with our customer's wellbeing. Their success is our only measure of success.",
+    title: "We are committed to responsible Finance | We financne sustainable progress",
+    desc: "We promote responsible financial practices and invest in sustainable growth that creates lasting value for our customers, communities, and the future.",
   },
-  {
-    title: "Continuous Improvement",
-    desc: "We embrace learning and innovation, constantly evolving our products and processes to better serve Ethiopia.",
-  },
-  {
-    title: "Equity",
-    desc: "Financial services should be accessible to all. We actively work to include those overlooked by conventional finance.",
-  },
+  // {
+  //   title: "Continuous Improvement",
+  //   desc: "We embrace learning and innovation, constantly evolving our products and processes to better serve Ethiopia.",
+  // },
+  // {
+  //   title: "Equity",
+  //   desc: "Financial services should be accessible to all. We actively work to include those overlooked by conventional finance.",
+  // },
 ];
 
 const milestones = [
@@ -59,7 +59,7 @@ const milestones = [
   },
   {
     year: "2023",
-    event: "20,000+ customers served across 20+ branches nationwide.",
+    event: "45,000+ customers served across 23+ branches nationwide.",
   },
 ];
 
@@ -105,7 +105,7 @@ export default function About() {
           >
             <span className="block w-8 h-px bg-[#BCBDC1] mb-6" />
             <h1 className="display-text text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-5 max-w-2xl">
-              About Nisir MFI
+              About Us
             </h1>
             <p className="text-white/55 text-lg max-w-lg leading-relaxed">
               Established in 2014 with a single purpose: to make financial
@@ -129,13 +129,10 @@ export default function About() {
                 >
                   <span className="divider-accent mb-5 block" />
                   <h2 className="display-text text-[#22348A] text-2xl mb-4">
-                    Our Mission
+                    Our Vision
                   </h2>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    To provide trusted, win-win and need-based financial
-                    solutions for the underserved by delivering innovative,
-                    digital-led and customer-centric services, contributing to
-                    the inclusive economic development of Ethiopia.
+                    To be a beacon of swift and seamless financial solutions for the underserved individuals and SMEs.
                   </p>
                 </motion.div>
                 <motion.div
@@ -147,13 +144,12 @@ export default function About() {
                 >
                   <span className="divider-accent mb-5 block" />
                   <h2 className="display-text text-[#22348A] text-2xl mb-4">
-                    Our Vision
+                    Our Mission
                   </h2>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    To become the financial services partner of choice for MSMEs
-                    and individuals through innovative, accessible and
-                    customer-centric services — Ethiopia's most trusted
-                    microfinance institution.
+                    To provide trusted, win-win and need-based financial
+                    solutions to customers and sustainable value to stakeholders through people centered & Intelligent system.
+
                   </p>
                 </motion.div>
               </div>
@@ -178,6 +174,45 @@ export default function About() {
         </div>
       </section>
 
+      {/* Core Values */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            className="mb-14"
+          >
+            <span className="divider-accent mb-5 block" />
+            <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl">
+              Our Core Values
+            </h2>
+          </motion.div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
+            {values.map((v, i) => (
+              <motion.div
+                key={v.title}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={i}
+                variants={fadeUp}
+                whileHover={{ backgroundColor: "#f8f9fe" }}
+                className="bg-white p-8 transition-colors"
+              >
+                <div className="text-[#22348A] font-bold text-sm mb-3">
+                  {v.title}
+                </div>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {v.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Who We Serve */}
       <section className="py-24 bg-[#f0f3fc]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -194,7 +229,7 @@ export default function About() {
                 Serving "the missing middle"
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                Nisir MFI occupies the vital space between informal money
+                Nisir MFI occupies the vital space between very small money
                 lenders and conventional commercial banks.
               </p>
               <div className="relative rounded-xl overflow-hidden shadow-lg">
@@ -216,8 +251,7 @@ export default function About() {
             >
               <div className="flex flex-col gap-3">
                 {[
-                  "Micro, small and medium enterprises (MSMEs)",
-                  "Smallholder farmers and agricultural cooperatives",
+                  "small and medium enterprises (SMEs)",
                   "Women entrepreneurs and youth-led businesses",
                   "Salaried workers and civil servants",
                   "Savings groups, cooperatives and associations",
@@ -237,45 +271,6 @@ export default function About() {
                 ))}
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Core Values */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            className="mb-14"
-          >
-            <span className="divider-accent mb-5 block" />
-            <h2 className="display-text text-[#22348A] text-3xl sm:text-4xl">
-              Our Core Values
-            </h2>
-          </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
-            {values.map((v, i) => (
-              <motion.div
-                key={v.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={i}
-                variants={fadeUp}
-                whileHover={{ backgroundColor: "#f8f9fe" }}
-                className="bg-white p-8 transition-colors"
-              >
-                <div className="text-[#22348A] font-bold text-sm mb-3">
-                  {v.title}
-                </div>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  {v.desc}
-                </p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
@@ -331,9 +326,9 @@ export default function About() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
             {[
               { label: "Years of service", value: "10+" },
-              { label: "Active customers", value: "20,000+" },
-              { label: "Branch offices", value: "20+" },
-              { label: "Team members", value: "200+" },
+              { label: "Active customers", value: "45,000+" },
+              { label: "Branch offices", value: "23+" },
+              { label: "Team members", value: "250+" },
             ].map((s, i) => (
               <motion.div
                 key={s.label}

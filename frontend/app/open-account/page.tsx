@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useCreateOpenAccountMutation } from "@/state/api/ApiSlice";
 
 const step1Schema = z.object({
   firstName: z.string().trim().min(2, "First name is required").max(255),
@@ -74,6 +75,8 @@ export default function Apply() {
     },
   });
 
+  const [createOpenAccount] = useCreateOpenAccountMutation();
+
   const onSubmit = async (data: z.infer<typeof step1Schema>) => {
     setLoading(true);
     try {
@@ -88,20 +91,7 @@ export default function Apply() {
         kebele: data.kebele.trim(),
       };
 
-      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-      const response = await fetch(`${BASE_URL}/open-account`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error ?? "Failed to submit application");
-      }
+      const result = await createOpenAccount(payload).unwrap();
 
       setApplicationId(result.data.applicationId);
       setApplicantName(`${data.firstName} ${data.lastName}`);
@@ -114,7 +104,7 @@ export default function Apply() {
       toast({
         variant: "destructive",
         title: "Submission failed",
-        description: error.message ?? "Something went wrong. Please try again.",
+        description: error?.data?.message || error.message || "Something went wrong. Please try again.",
       });
     } finally {
       setLoading(false);

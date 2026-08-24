@@ -30,22 +30,22 @@ const info = [
   {
     icon: MapPin,
     label: "Head Office",
-    lines: ["Bole Sub-city, Addis Ababa", "Ethiopia"],
+    lines: ["Bole Rwanda to Atlas Road Nisir bldg", "Addis Ababa,Ethiopia"],
   },
   {
     icon: Phone,
     label: "Telephone",
-    lines: ["+251 116 39 13 38", "+251 116 39 13 39"],
+    lines: ["9404", "+251 115 622 225", "+251 115 622 371"],
   },
   {
     icon: Mail,
     label: "Email",
-    lines: ["info@nisirmfi.com", "support@nisirmfi.com"],
+    lines: ["info@nisirmfi.com", "  "],
   },
   {
     icon: Clock,
     label: "Office Hours",
-    lines: ["Mon–Fri: 8:30 AM – 5:30 PM", "Saturday: 9:00 AM – 1:00 PM"],
+    lines: ["Mon–Sat: 8:00 AM – 5:00 PM"],
   },
 ];
 

@@ -43,6 +43,11 @@ class Document(Base):
         nullable=True
     )
 
+    contentHash = mapped_column(
+        String,
+        nullable=True
+    )
+
     contentType = mapped_column(
         String,
         nullable=True

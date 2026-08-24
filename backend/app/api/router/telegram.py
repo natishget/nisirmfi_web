@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import uuid
 from fastapi import APIRouter
 from telegram import Update
@@ -14,6 +15,8 @@ router = APIRouter(
     prefix="/telegram",
     tags=["telegram"]
 )
+
+logger = logging.getLogger(__name__)
 
 TELEGRAM_BOT_TOKEN = settings.TELEGRAM_BOT_TOKEN
 
@@ -57,12 +60,12 @@ async def handle_telegram_message(update: Update, context: ContextTypes.DEFAULT_
         await update.message.reply_text(ai_response)
         
     except Exception as e:
-        print(f"Error processing message for Telegram: {e}")
+        logger.error(f"Error processing Telegram message: {e}", exc_info=True)
         await update.message.reply_text("Sorry, I ran into an error processing your request.")
 
 async def run_telegram_bot():
     """Initializes and starts the bot application using long polling."""
-    print("Starting Telegram Bot long-polling service...")
+    logger.info("Starting Telegram Bot long-polling service...")
     
     # Initialize the python-telegram-bot application
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()

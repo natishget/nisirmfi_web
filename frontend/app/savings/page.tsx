@@ -16,58 +16,58 @@ const IMG = {
 };
 
 const products = [
+
   {
     title: "Regular Savings",
-    tagline: "Everyday access, daily discipline",
-    img: IMG.regular,
-    rate: "Up to 7% p.a.",
-    desc: "An accessible savings account with no minimum balance. Build the habit of saving with flexible deposits and withdrawals, earning monthly interest.",
-    features: [
-      "No minimum balance",
-      "Free withdrawals anytime",
-      "Monthly interest credits",
-      "Digital account access",
-    ],
+    tagline: "Your daily savings, growing steadily",
+    color: "from-emerald-900 to-emerald-950",
+    border: "border-emerald-500/30",
+    iconColor: "text-emerald-400",
+    benefits: ["Interest rate of 10%", "500 Minimum Balance", "Instant withdrawals"]
   },
   {
-    title: "Fixed Deposit",
-    tagline: "Guaranteed returns on committed savings",
-    img: IMG.fixed,
-    rate: "Up to 11% p.a.",
-    desc: "Lock your savings for a defined period and earn Ethiopia's most competitive guaranteed interest rates.",
-    features: [
-      "Highest interest rate tier",
-      "Terms from 3 to 36 months",
-      "Guaranteed at maturity",
-      "Automatic renewal option",
-    ],
+    title: "Fixed Time Deposit",
+    tagline: "Lock in guaranteed returns",
+    color: "from-blue-900 to-blue-950",
+    border: "border-blue-500/30",
+    iconColor: "text-blue-400",
+    benefits: ["Rate Starting From 12%", "Flexible tenures 6 Months-1 Year", "Premature withdrawal option"]
+
   },
   {
-    title: "Goal-Based Savings",
-    tagline: "Save with a purpose in mind",
-    img: IMG.goal,
-    rate: "Up to 9% p.a.",
-    desc: "Define a specific goal — school fees, a new property, business capital — and save toward it systematically.",
-    features: [
-      "Goal tracking dashboard",
-      "Scheduled contributions",
-      "Milestone notifications",
-      "Flexible monthly amounts",
-    ],
+    title: "Child Savings 'Maleda'",
+    tagline: "Secure their tomorrow, today",
+    color: "from-purple-900 to-purple-950",
+    border: "border-purple-500/30",
+    iconColor: "text-purple-400",
+    benefits: ["11% interest rate"]
+
   },
   {
-    title: "Group Savings",
-    tagline: "Collective strength, shared progress",
-    img: IMG.group,
-    rate: "Up to 8% p.a.",
-    desc: "A structured group savings arrangement for 5–30 members who pool resources, rotate access and earn shared interest.",
-    features: [
-      "Groups of 5 to 30 members",
-      "Rotating credit access",
-      "Shared interest earnings",
-      "Dedicated group officer",
-    ],
+    title: "Women's Savings 'Alem'",
+    tagline: "Designed for her financial independence",
+    color: "from-rose-900 to-rose-950",
+    border: "border-rose-500/30",
+    iconColor: "text-rose-400",
+    benefits: ["11% Interest Rate"]
+
   },
+  {
+    title: "Elderly Savings 'Efoy'",
+    tagline: "Retire with dignity and comfort",
+    color: "from-amber-900 to-amber-950",
+    border: "border-amber-500/30",
+    iconColor: "text-amber-400",
+    benefits: ["Highest interest tier at 11%"]
+  },
+  {
+    title: "Disability Savings 'Yichalal'",
+    tagline: "Walk with Nisir",
+    color: "from-purple-900 to-purple-950",
+    border: "border-purple-500/30",
+    iconColor: "text-purple-400",
+    benefits: ["11% interest rate"]
+  }
 ];
 
 const reasons = [

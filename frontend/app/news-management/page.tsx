@@ -2,6 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import {
+  useGetNewsQuery,
+  useCreateNewsMutation,
+  useUpdateNewsMutation,
+  useUpdateNewsImageMutation,
+  useDeleteNewsMutation,
+} from "@/state/api/ApiSlice";
 import {
   Calendar,
   Clock3,
@@ -20,6 +28,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -144,211 +154,108 @@ function fieldLabel(text: string) {
   );
 }
 
-export default function NewsManagementPage() {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("All");
-  const [statusFilter, setStatusFilter] = useState<"All" | NewsStatus>("All");
+export default function NewsManagement() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<NewsItem | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<NewsItem | null>(null);
   const [formState, setFormState] = useState<NewsFormState>(defaultFormState);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState<"All" | NewsStatus>("All");
+  const [deleteTarget, setDeleteTarget] = useState<NewsItem | null>(null);
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("formState", formState);
-  }, [formState]);
-
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-        const response = await fetch(`${BASE_URL}/news`);
-        if (!response.ok) {
-          throw new Error("Failed to load news items from server");
-        }
-        const json = await response.json();
-        const mapped: NewsItem[] = json.map((item: any) => ({
-          id: item.id,
-          title: item.title,
-          category: item.category,
-          status:
-            item.status === "PUBLISHED" ? "Published" :
-            item.status === "ARCHIVED" ? "Scheduled" : "Draft",
-          summary: item.summary,
-          author: "Admin Team",
-          publishedAt: item.publishedDate ? item.publishedDate.slice(0, 10) : new Date().toISOString().slice(0, 10),
-          readTime: `${item.readTime} min read`,
-          image: item.imageUrl,
-          featured: item.isFeatured,
-        }));
-        setNewsItems(mapped);
-      } catch (err) {
-        console.error("Failed to load news from server:", err);
-      }
-    }
-    loadNews();
-  }, []);
-
-  const submitNewsItem = async (item: NewsFormState) => {
-    const statusMap: Record<string, string> = {
-      Published: "PUBLISHED",
-      Draft: "DRAFT",
-      Scheduled: "ARCHIVED",
-    };
-    const backendStatus = statusMap[item.status] || "DRAFT";
-    const readTimeNum = parseInt(item.readTime) || 3;
-    const isFeatured = Boolean(item.featured);
-
-    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-    const isEditing = Boolean(editingItem);
-
-    let response;
-
-    if (isEditing) {
-      const textFields = {
-        title: item.title.trim(),
-        category: item.category,
-        status: backendStatus,
-        summary: item.summary.trim(),
-        publishedDate: new Date(item.publishedAt).toISOString(),
-        readTime: readTimeNum,
-        isFeatured,
-      };
-
-      response = await fetch(`${BASE_URL}/news/${editingItem?.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(textFields),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update news details on backend");
-      }
-
-      if (item.image) {
-        const imageFormData = new FormData();
-        imageFormData.append("image", item.image);
-
-        const imageResponse = await fetch(`${BASE_URL}/news/${editingItem?.id}/image`, {
-          method: "PATCH",
-          body: imageFormData,
-          credentials: "include",
-        });
-
-        if (!imageResponse.ok) {
-          throw new Error("Failed to update news image on backend");
-        }
-        response = imageResponse;
-      }
-    } else {
-      const formData = new FormData();
-      formData.append("title", item.title.trim());
-      formData.append("category", item.category);
-      formData.append("status", backendStatus);
-      formData.append("summary", item.summary.trim());
-      formData.append("publishedDate", new Date(item.publishedAt).toISOString());
-      formData.append("readTime", String(readTimeNum));
-      formData.append("isFeatured", String(isFeatured));
-
-      if (item.image) {
-        formData.append("image", item.image);
-      }
-
-      response = await fetch(`${BASE_URL}/news`, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
-    }
-
-    if (!response.ok) {
-      throw new Error("Failed to save news item to server");
-    }
-    const serverItem = await response.json();
-
-    const mappedItem: NewsItem = {
-      id: serverItem.id,
-      title: serverItem.title,
-      category: serverItem.category,
-      status:
-        serverItem.status === "PUBLISHED" ? "Published" :
-        serverItem.status === "ARCHIVED" ? "Scheduled" : "Draft",
-      summary: serverItem.summary,
-      author: "Admin Team",
-      publishedAt: serverItem.publishedDate ? serverItem.publishedDate.slice(0, 10) : item.publishedAt,
-      readTime: `${serverItem.readTime} min read`,
-      image: serverItem.imageUrl,
-      featured: serverItem.isFeatured,
-    };
-
-    return mappedItem;
+  const statusMap: Record<string, string> = {
+    Published: "PUBLISHED",
+    Draft: "DRAFT",
+    Scheduled: "ARCHIVED",
   };
+
+  const reverseStatusMap: Record<string, NewsStatus> = {
+    PUBLISHED: "Published",
+    DRAFT: "Draft",
+    ARCHIVED: "Scheduled",
+  };
+
+  const { data: newsQueryData, error: newsQueryError, isLoading: isNewsQueryLoading } = useGetNewsQuery({});
+  const [createNewsMutation] = useCreateNewsMutation();
+  const [updateNewsMutation] = useUpdateNewsMutation();
+  const [updateNewsImageMutation] = useUpdateNewsImageMutation();
+  const [deleteNewsMutation] = useDeleteNewsMutation();
+
+  const newsItems = useMemo(() => {
+    if (!newsQueryData?.data) return [];
+    return newsQueryData.data.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      category: item.category,
+      status: reverseStatusMap[item.status] || "Draft",
+      summary: item.summary,
+      author: "Admin Team",
+      publishedAt: item.publishedDate ? item.publishedDate.slice(0, 10) : new Date().toISOString().slice(0, 10),
+      readTime: `${item.readTime} min read`,
+      image: item.imageUrl,
+      featured: item.isFeatured,
+    }));
+  }, [newsQueryData]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // 1. Setup a temporary local image preview URL for an instant UI update
-    let localPreviewUrl = "/placeholder.svg";
-    if (formState.image) {
-      localPreviewUrl = URL.createObjectURL(formState.image);
-    } else if (editingItem) {
-      localPreviewUrl = editingItem.image;
-    }
-
-    const targetId = editingItem?.id ?? Date.now();
-
-    const optimisticItem: NewsItem = {
-      id: targetId,
-      title: formState.title.trim(),
-      category: formState.category.trim(),
-      status: formState.status,
-      summary: formState.summary.trim(),
-      author: formState.author.trim(),
-      publishedAt: formState.publishedAt,
-      readTime: formState.readTime.trim() || "3 min read",
-      image: localPreviewUrl,
-      featured: formState.featured,
-    };
-
-    setNewsItems((current) => {
-      if (editingItem) {
-        return current.map((item) =>
-          item.id === editingItem.id ? optimisticItem : item,
-        );
-      }
-      return [optimisticItem, ...current];
-    });
-
-    setEditorOpen(false);
-    const backupEditingItem = editingItem; // Backup reference in case we need to roll back
-    setEditingItem(null);
-    setFormState(defaultFormState);
+    const backendStatus = statusMap[formState.status] || "DRAFT";
+    const readTimeNum = parseInt(formState.readTime) || 3;
+    const isFeatured = Boolean(formState.featured);
+    const isEditing = Boolean(editingItem);
 
     try {
-      const savedItemFromServer: NewsItem = await submitNewsItem(formState);
+      if (isEditing && editingItem) {
+        const textFields = {
+          title: formState.title.trim(),
+          category: formState.category,
+          status: backendStatus,
+          summary: formState.summary.trim(),
+          publishedDate: new Date(formState.publishedAt).toISOString(),
+          readTime: readTimeNum,
+          isFeatured,
+        };
 
-      setNewsItems((current) =>
-        current.map((item) =>
-          item.id === targetId ? savedItemFromServer : item,
-        ),
-      );
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("Could not save to server. Reverting your local changes.");
+        await updateNewsMutation({
+          id: editingItem.id.toString(),
+          body: textFields,
+        }).unwrap();
 
-      setNewsItems((current) => {
-        if (backupEditingItem) {
-          return current.map((item) =>
-            item.id === backupEditingItem.id ? backupEditingItem : item,
-          );
+        if (formState.image) {
+          const imageFormData = new FormData();
+          imageFormData.append("image", formState.image);
+          await updateNewsImageMutation({
+            id: editingItem.id.toString(),
+            body: imageFormData,
+          }).unwrap();
         }
-        return current.filter((item) => item.id !== targetId);
-      });
+      } else {
+        const formData = new FormData();
+        formData.append("title", formState.title.trim());
+        formData.append("category", formState.category);
+        formData.append("status", backendStatus);
+        formData.append("summary", formState.summary.trim());
+        formData.append("publishedDate", new Date(formState.publishedAt).toISOString());
+        formData.append("readTime", String(readTimeNum));
+        formData.append("isFeatured", String(isFeatured));
+
+        if (formState.image) {
+          formData.append("image", formState.image);
+        }
+
+        await createNewsMutation(formData).unwrap();
+      }
+
+      toast.success("News item saved successfully!");
+      setEditorOpen(false);
+      setEditingItem(null);
+      setFormState(defaultFormState);
+    } catch (error) {
+      console.error("API Error saving news:", error);
+      toast.error("Could not save news item to server.");
     }
   };
 
@@ -409,22 +316,11 @@ export default function NewsManagementPage() {
     if (!deleteTarget) return;
 
     try {
-      const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-      const response = await fetch(`${BASE_URL}/news/${deleteTarget.id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete news item from server");
-      }
-
-      setNewsItems((current) =>
-        current.filter((item) => item.id !== deleteTarget.id),
-      );
+      await deleteNewsMutation(deleteTarget.id.toString()).unwrap();
+      toast.success("News item deleted successfully!");
     } catch (error) {
       console.error("Delete Error:", error);
-      alert("Could not delete news item from the server. Please try again.");
+      toast.error("Could not delete news item from the server.");
     } finally {
       setDeleteTarget(null);
     }

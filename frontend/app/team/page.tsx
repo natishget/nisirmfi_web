@@ -153,16 +153,16 @@ const managers = [
     photo: "../teams/yeshewafire 2.jpg",
   },
   {
-    name: "W/ro Tigist Mulugeta",
-    role: "Risk Assessment Manager",
+    name: "Melaku W/Senbet",
+    role: "Brand Manager",
     photo:
-      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=300&q=80",
+      "../teams/Melaku W.Senbet.jpg",
   },
   {
-    name: "Ato Ermias Girma",
-    role: "Customer Service Manager",
+    name: "Nahom Tesfaye",
+    role: "Project Manager",
     photo:
-      "https://images.unsplash.com/photo-1548532928-b34e3be62e91?auto=format&fit=crop&w=300&q=80",
+      "../teams/Nahom Tesfaye.JPG",
   },
   {
     name: "W/ro Biruk Alemu",

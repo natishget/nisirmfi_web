@@ -79,7 +79,7 @@ export default function DashboardPage() {
           </div>
 
           <h1 className="display-text text-4xl leading-tight text-[#1f2b63] sm:text-5xl lg:text-6xl">
-            A polished dashboard for every management task.
+            Every Management tasks.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
             Jump straight into the areas that matter most. Each card below opens

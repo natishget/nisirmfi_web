@@ -40,31 +40,14 @@ function formatDisplayDate(dateValue: string) {
   }
 }
 
+import { useGetNewsQuery } from "@/state/api/ApiSlice";
+
 export default function News() {
-  const [newsItems, setNewsItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-        const response = await fetch(`${BASE_URL}/news?status=PUBLISHED&limit=100`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch news");
-        }
-        const json = await response.json();
-        setNewsItems(json.data || []);
-      } catch (err) {
-        console.error("Failed to load news articles:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadNews();
-  }, []);
-
+  const { data, isLoading } = useGetNewsQuery({ status: "PUBLISHED", limit: 100 });
+  const newsItems = data?.data || [];
   const featuredStory = newsItems.find((item) => item.isFeatured) || newsItems[0];
   const regularArticles = newsItems.filter((item) => item.id !== featuredStory?.id);
+  const loading = isLoading;
 
   return (
     <div className="overflow-x-hidden">
@@ -146,9 +129,8 @@ export default function News() {
                   <div className="lg:col-span-3 bg-[#22348A] p-10 md:p-12 flex flex-col justify-between">
                     <div>
                       <span
-                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-5 ${
-                          catColors[featuredStory.category] || "bg-white/10 text-white"
-                        }`}
+                        className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-5 ${catColors[featuredStory.category] || "bg-white/10 text-white"
+                          }`}
                       >
                         <Tag className="w-3 h-3" /> {featuredStory.category}
                       </span>
@@ -215,9 +197,8 @@ export default function News() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#22348A]/50 to-transparent" />
                         <span
-                          className={`absolute top-3 left-3 inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full ${
-                            catColors[a.category] || "bg-gray-100 text-gray-600"
-                          }`}
+                          className={`absolute top-3 left-3 inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full ${catColors[a.category] || "bg-gray-100 text-gray-600"
+                            }`}
                         >
                           {a.category}
                         </span>

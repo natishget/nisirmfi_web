@@ -77,19 +77,37 @@ function toFormValues(user?: UserRecord | null): UserFormValues {
   };
 }
 
-export default function UserManagementClient({
-  initialUsers,
-}: {
-  initialUsers: UserRecord[];
-}) {
+import {
+  useGetUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useChangePasswordUserMutation,
+  useDeleteUserMutation,
+} from "@/state/api/ApiSlice";
+
+export default function UserManagementClient() {
   const router = useRouter();
-  const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState("");
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserRecord | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<UserRecord | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const { data: usersQueryData, isLoading: isUsersLoading } = useGetUsersQuery();
+  const [createUser] = useCreateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [changePasswordUser] = useChangePasswordUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const users = useMemo(() => {
+    if (!usersQueryData) return [];
+    return usersQueryData.map((u: any) => ({
+      id: u.userId,
+      email: u.email,
+      fullName: u.fullName,
+    }));
+  }, [usersQueryData]);
 
   const {
     register,
@@ -151,6 +169,8 @@ export default function UserManagementClient({
     clearErrors();
   };
 
+
+
   const submitUser = async (values: UserFormValues) => {
     const payload = {
       email: values.email.trim().toLowerCase(),
@@ -167,46 +187,21 @@ export default function UserManagementClient({
     }
 
     const isEditing = Boolean(editingUser);
-    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-    const response = await fetch(
-      isEditing ? `${BASE_URL}/user/${editingUser?.id}` : `${BASE_URL}/user`,
-      {
-        method: isEditing ? "PATCH" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      },
-    );
-
-    const responseBody = (await response.json().catch(() => ({}))) as {
-      data?: UserRecord;
-      error?: string;
-    };
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        router.replace("/admin-l09in");
-        return;
+    try {
+      if (isEditing && editingUser) {
+        // If password is changed, run password change mutation first
+        if (payload.password) {
+          await changePasswordUser({ id: editingUser.id, body: { password: payload.password } }).unwrap();
+        }
+        await updateUser({ id: editingUser.id, body: { email: payload.email, fullName: payload.fullName } }).unwrap();
+      } else {
+        await createUser(payload).unwrap();
       }
-
-      setSubmitError(responseBody.error ?? "Unable to save user");
-      return;
+      closeEditor();
+      reset(defaultFormValues);
+    } catch (err: any) {
+      setSubmitError(err?.data?.message || "Unable to save user");
     }
-
-    const savedUser = responseBody.data;
-
-    if (savedUser) {
-      setUsers((current) =>
-        isEditing
-          ? current.map((user) => (user.id === savedUser.id ? savedUser : user))
-          : [savedUser, ...current],
-      );
-    }
-
-    closeEditor();
-    reset(defaultFormValues);
   };
 
   const confirmDelete = async () => {
@@ -215,31 +210,12 @@ export default function UserManagementClient({
     }
 
     setDeleteError(null);
-
-    const BASE_URL = (process.env.NEXT_PUBLIC_LOCAL_API || "http://localhost:3001/").trim().replace(/\/$/, "");
-    const response = await fetch(`${BASE_URL}/user/${deleteTarget.id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        router.replace("/admin-l09in");
-        return;
-      }
-
-      const body = (await response.json().catch(() => ({}))) as {
-        error?: string;
-      };
-
-      setDeleteError(body.error ?? "Unable to delete user");
-      return;
+    try {
+      await deleteUser(deleteTarget.id).unwrap();
+      setDeleteTarget(null);
+    } catch (err: any) {
+      setDeleteError(err?.data?.message || "Unable to delete user");
     }
-
-    setUsers((current) =>
-      current.filter((user) => user.id !== deleteTarget.id),
-    );
-    setDeleteTarget(null);
   };
 
   return (
