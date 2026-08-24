@@ -94,6 +94,21 @@ export default function UserManagementClient() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const { data: usersQueryData, isLoading: isUsersLoading } = useGetUsersQuery();
+  const [createUser] = useCreateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [changePasswordUser] = useChangePasswordUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const users = useMemo(() => {
+    if (!usersQueryData) return [];
+    return usersQueryData.map((u: any) => ({
+      id: u.userId,
+      email: u.email,
+      fullName: u.fullName,
+    }));
+  }, [usersQueryData]);
+
   const {
     register,
     handleSubmit,
@@ -154,20 +169,7 @@ export default function UserManagementClient() {
     clearErrors();
   };
 
-  const { data: usersQueryData, isLoading: isUsersLoading } = useGetUsersQuery();
-  const [createUser] = useCreateUserMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const [changePasswordUser] = useChangePasswordUserMutation();
-  const [deleteUser] = useDeleteUserMutation();
 
-  const users = useMemo(() => {
-    if (!usersQueryData) return [];
-    return usersQueryData.map((u: any) => ({
-      id: u.userId,
-      email: u.email,
-      fullName: u.fullName,
-    }));
-  }, [usersQueryData]);
 
   const submitUser = async (values: UserFormValues) => {
     const payload = {

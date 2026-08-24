@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const protectedPagePrefixes = [
-  "/dashboard",
+  "/management",
   "/news-management",
   "/career-management",
   "/careers-management",
@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
+    "/management/:path*",
     "/news-management/:path*",
     "/career-management/:path*",
     "/careers-management/:path*",

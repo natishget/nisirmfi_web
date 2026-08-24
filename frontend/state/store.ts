@@ -5,12 +5,15 @@ import { toast } from "sonner";
 export const rtkQueryErrorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action: any) => {
     if (isRejectedWithValue(action)) {
-      if (action.payload?.status === 401) {
-        toast.error("Session expired. Please log in again.");
-      } else {
-        toast.error(
-          action.payload?.data?.message || "An error occurred. Please try again later."
-        );
+      const endpointName = action.meta?.arg?.endpointName;
+      if (endpointName !== "getProtectedUser") {
+        if (action.payload?.status === 401) {
+          toast.error("Session expired. Please log in again.");
+        } else {
+          toast.error(
+            action.payload?.data?.message || "An error occurred. Please try again later."
+          );
+        }
       }
     }
     return next(action);

@@ -10,6 +10,7 @@ import {
 import type { Response, Request } from 'express';
 
 import { AuthService } from './auth.service';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { CreateAuthDto, LoginAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtAuthGuard } from './guards/jwt_auth.guard';
@@ -48,6 +49,7 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
+  @UseGuards(ThrottlerGuard)
   @Post('login')
   async login(
     @Body() loginAuthDto: LoginAuthDto,

@@ -9,6 +9,7 @@ import { CareerModule } from './career/career.module';
 import { UploadModule } from './upload/upload.module';
 import { OpenAccountModule } from './open-account/open-account.module';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 5,
+    }]),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -35,7 +35,7 @@ export default function AdminLoginForm() {
     try {
       const response = await login(data).unwrap();
       console.log("response", response);
-      router.replace("/dashboard");
+      router.replace("/management");
       router.refresh();
     } catch (error: any) {
       setSubmitError(error?.data?.message ?? "Unable to sign in");

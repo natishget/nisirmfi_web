@@ -190,6 +190,29 @@ export default function CareerManagementClient() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const { data: careersQueryData, isLoading: isCareersLoading } = useGetCareersQuery({});
+  const [createCareer] = useCreateCareerMutation();
+  const [updateCareer] = useUpdateCareerMutation();
+  const [deleteCareer] = useDeleteCareerMutation();
+
+  const careers = useMemo(() => {
+    if (!careersQueryData?.data) return [];
+    return careersQueryData.data.map((c: any) => ({
+      id: c.id,
+      title: c.title,
+      department: c.department,
+      location: c.location,
+      type: c.type,
+      purpose: c.purpose,
+      responsibilities: Array.isArray(c.requirements) ? c.requirements : (c.requirements ? c.requirements.split("\n") : []),
+      qualification: Array.isArray(c.description) ? c.description : (c.description ? c.description.split("\n") : []),
+      salary: "Negotiable",
+      benefits: [],
+      postDate: c.createdAt ? c.createdAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
+      endDate: c.updatedAt ? c.updatedAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
+    }));
+  }, [careersQueryData]);
+
   const {
     register,
     handleSubmit,
@@ -268,28 +291,6 @@ export default function CareerManagementClient() {
     setSubmitError(null);
   };
 
-  const { data: careersQueryData, isLoading: isCareersLoading } = useGetCareersQuery({});
-  const [createCareer] = useCreateCareerMutation();
-  const [updateCareer] = useUpdateCareerMutation();
-  const [deleteCareer] = useDeleteCareerMutation();
-
-  const careers = useMemo(() => {
-    if (!careersQueryData?.data) return [];
-    return careersQueryData.data.map((c: any) => ({
-      id: c.id,
-      title: c.title,
-      department: c.department,
-      location: c.location,
-      type: c.type,
-      purpose: c.purpose,
-      responsibilities: Array.isArray(c.requirements) ? c.requirements : (c.requirements ? c.requirements.split("\n") : []),
-      qualification: Array.isArray(c.description) ? c.description : (c.description ? c.description.split("\n") : []),
-      salary: "Negotiable",
-      benefits: [],
-      postDate: c.createdAt ? c.createdAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
-      endDate: c.updatedAt ? c.updatedAt.slice(0, 10) : new Date().toISOString().slice(0, 10),
-    }));
-  }, [careersQueryData]);
 
   const submitCareer = async (values: ManagementFormValues) => {
     const payload = {
