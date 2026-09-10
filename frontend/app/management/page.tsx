@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -9,175 +8,108 @@ import {
   LayoutGrid,
   Megaphone,
   ShieldCheck,
-  Sparkles,
   UsersRound,
+  MapPin,
 } from "lucide-react";
 
-const managementCards = [
+const managementModules = [
   {
-    title: "News Management",
-    description:
-      "Create, publish, and refine company updates, announcements, and featured stories.",
+    title: "News & Announcements",
+    description: "Publish and manage company updates, news articles, and featured stories.",
     href: "/news-management",
     icon: Megaphone,
-    accent: "from-[#22348A] to-[#3e5bdb]",
-    glow: "shadow-[0_25px_60px_rgba(34,52,138,0.22)]",
+    color: "bg-blue-50 text-blue-700",
   },
   {
-    title: "Career Management",
-    description:
-      "Handle open roles, update application windows, and keep hiring content fresh.",
+    title: "Career & Recruiting",
+    description: "Manage open job positions, review application windows, and hiring content.",
     href: "/career-management",
     icon: BriefcaseBusiness,
-    accent: "from-[#0f766e] to-[#14b8a6]",
-    glow: "shadow-[0_25px_60px_rgba(15,118,110,0.2)]",
+    color: "bg-emerald-50 text-emerald-700",
   },
   {
-    title: "User Management",
-    description:
-      "Add new users, adjust account details, and remove access when it is no longer needed.",
+    title: "User Administration",
+    description: "Control user access, roles, account details, and system permissions.",
     href: "/user-management",
     icon: UsersRound,
-    accent: "from-[#8b5cf6] to-[#ec4899]",
-    glow: "shadow-[0_25px_60px_rgba(139,92,246,0.2)]",
+    color: "bg-purple-50 text-purple-700",
   },
   {
-    title: "Applications Management",
-    description:
-      "Track customer account openings, review submitted details, and update review statuses.",
+    title: "Applications Processing",
+    description: "Review customer account applications, verify submitted documents, and update statuses.",
     href: "/applications-management",
     icon: FileText,
-    accent: "from-[#ea580c] to-[#f97316]",
-    glow: "shadow-[0_25px_60px_rgba(234,88,12,0.2)]",
+    color: "bg-orange-50 text-orange-700",
+  },
+  {
+    title: "Branch Management",
+    description: "Add, update, or remove branch locations, operating hours, and contact details.",
+    href: "/branches-management",
+    icon: MapPin,
+    color: "bg-indigo-50 text-indigo-700",
   },
 ];
 
-const cardVariants: any = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: index * 0.12,
-      duration: 0.55,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
-};
-
-export default function DashboardPage() {
+export default function ManagementDashboard() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(34,52,138,0.18),_transparent_32%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.14),_transparent_28%),linear-gradient(180deg,_#f4f7ff_0%,_#edf3ff_48%,_#ffffff_100%)]">
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#22348A]/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-[-8rem] right-[-4rem] h-80 w-80 rounded-full bg-[#14b8a6]/10 blur-3xl" />
-
-      <section className="relative mx-auto max-w-7xl px-5 pb-20 pt-28 sm:px-8 lg:px-10 lg:pt-32">
-        <div className="max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm font-medium text-[#22348A] shadow-[0_10px_40px_rgba(34,52,138,0.08)] backdrop-blur">
-            <Sparkles className="h-4 w-4" />
-            Admin command center
-          </div>
-
-          <h1 className="display-text text-4xl leading-tight text-[#1f2b63] sm:text-5xl lg:text-6xl">
-            Every Management tasks.
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        {/* Header Section */}
+        <div className="mb-10">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Administration Dashboard
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-            Jump straight into the areas that matter most. Each card below opens
-            a focused management workspace with a clean, confident visual style.
+          <p className="mt-2 text-sm text-gray-600 sm:text-base">
+            Select a management module below to configure system data and operations.
           </p>
         </div>
 
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          className="mt-12 grid gap-6 lg:grid-cols-3"
-        >
-          {managementCards.map((card, index) => {
-            const Icon = card.icon;
-
+        {/* Modules Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {managementModules.map((module) => {
+            const Icon = module.icon;
             return (
-              <motion.div
-                key={card.href}
-                custom={index}
-                variants={cardVariants}
-                whileHover={{ y: -8, scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 220, damping: 22 }}
-                className={`group relative overflow-hidden rounded-[28px] border border-white/80 bg-white/90 p-7 shadow-[0_24px_80px_rgba(34,52,138,0.08)] backdrop-blur ${card.glow}`}
+              <Link
+                key={module.href}
+                href={module.href}
+                className="group relative flex flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-[#22348A] hover:shadow-md"
               >
-                <div
-                  className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${card.accent}`}
-                />
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-slate-100/80 blur-2xl transition-opacity duration-300 group-hover:opacity-70" />
-
-                <div className="relative flex h-full flex-col">
-                  <div
-                    className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} text-white shadow-lg`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-
-                  <h2 className="text-2xl font-semibold tracking-tight text-[#1f2b63]">
-                    {card.title}
-                  </h2>
-                  <p className="mt-3 flex-1 text-sm leading-7 text-slate-600">
-                    {card.description}
-                  </p>
-
-                  <Link href={card.href} className="mt-8">
-                    <span className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#22348A] px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#162260]">
-                      Open workspace
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </Link>
+                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg ${module.color}`}>
+                  <Icon className="h-6 w-6" />
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {[
-            {
-              label: "Secure access",
-              value: "Protected by session login",
-              icon: ShieldCheck,
-            },
-            {
-              label: "Quick navigation",
-              value: "One click to every admin area",
-              icon: LayoutGrid,
-            },
-            {
-              label: "Modern workflow",
-              value: "Simple, focused, and fast",
-              icon: Sparkles,
-            },
-          ].map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <div
-                key={item.label}
-                className="rounded-3xl border border-white/80 bg-white/70 px-5 py-4 shadow-[0_18px_50px_rgba(34,52,138,0.06)] backdrop-blur"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 rounded-2xl bg-[#f0f3fc] p-2 text-[#22348A]">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                      {item.label}
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-slate-700">
-                      {item.value}
-                    </p>
-                  </div>
+                <h2 className="mb-2 text-lg font-semibold text-gray-900 group-hover:text-[#22348A] transition-colors">
+                  {module.title}
+                </h2>
+                <p className="mb-6 flex-1 text-sm text-gray-500 leading-relaxed">
+                  {module.description}
+                </p>
+                <div className="mt-auto flex items-center text-sm font-medium text-[#22348A]">
+                  Manage Module
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
-      </section>
-    </main>
+
+        {/* Quick Stats or Info Footer */}
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 border-t border-gray-200 pt-8">
+           <div className="flex items-center gap-3">
+              <ShieldCheck className="h-5 w-5 text-gray-400" />
+              <div>
+                <p className="text-sm font-medium text-gray-900">Secure Environment</p>
+                <p className="text-xs text-gray-500">Access is logged and monitored.</p>
+              </div>
+           </div>
+           <div className="flex items-center gap-3">
+              <LayoutGrid className="h-5 w-5 text-gray-400" />
+              <div>
+                <p className="text-sm font-medium text-gray-900">Centralized Control</p>
+                <p className="text-xs text-gray-500">All modules in one unified interface.</p>
+              </div>
+           </div>
+        </div>
+      </div>
+    </div>
   );
 }
