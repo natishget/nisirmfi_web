@@ -19,7 +19,7 @@ async def generate_response(
 ):
     logger.debug("Generating Gemini response")
     try:
-        response = client.models.generate_content(
+        response = await client.aio.models.generate_content(
             model="gemini-2.5-flash",
             contents=history,
             config=GenerateContentConfig(

@@ -6,6 +6,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from app.services.chat_service import process_user_message
 from app.core.rate_limit import telegram_rate_limiter
+from app.services.router_service import is_amharic_local
 
 from app.core.database import AsyncSessionLocal
 
@@ -30,14 +31,20 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Captures all text messages and feeds them directly into your existing ChatService."""
     user_message = update.message.text
-    telegram_chat_id = str(update.effective_chat.id) 
+    telegram_chat_id = str(update.effective_chat.id)
+    telegram_user_id = str(update.effective_user.id) if update.effective_user else telegram_chat_id
 
-    # 🛠️ Convert the Telegram numeric ID into a valid, persistent UUID format
+    # 🛠️ Convert the Telegram numeric ID into a valid, persistent UUID format for DB lookup
     telegram_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, telegram_chat_id))
 
-    # Apply rate limiting based on the user's UUID (conversation_id)
-    if not telegram_rate_limiter.is_allowed(telegram_uuid):
-        await update.message.reply_text("You are sending messages too fast. Please wait a moment.")
+    # Apply rate limiting based on Telegram User ID
+    if not telegram_rate_limiter.is_allowed(telegram_user_id):
+        is_amh = is_amharic_local(user_message)
+        if is_amh:
+            msg = "የ10 መልእክት ገደብዎ ላይ ደርሰዋል። የቻትቦት መዳረሻዎ ከ24 ሰዓታት በኋላ እንደገና ይጀምራል።"
+        else:
+            msg = "You have reached your 10-message limit. Your chatbot access will reset after 24 hours."
+        await update.message.reply_text(msg)
         return
 
     await context.bot.send_chat_action(chat_id=telegram_chat_id, action="typing")
@@ -45,8 +52,6 @@ async def handle_telegram_message(update: Update, context: ContextTypes.DEFAULT_
     try:
         # Instantiate your existing chatbot service logic
         async with AsyncSessionLocal() as db:
-            
-            # 🛠️ FIX 3: Call your actual async pipeline function directly
             result = await process_user_message(
                 db=db,
                 message_text=user_message,
