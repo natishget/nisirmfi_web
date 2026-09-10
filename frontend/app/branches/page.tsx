@@ -3,169 +3,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Clock, Search } from "lucide-react";
 
-const branches = [
-  {
-    name: "Premium Branch",
-    city: "Addis Ababa",
-    area: "Bole Rwanda to Atlas Nisir Bldg., European Union Street",
-    phone: "+251 116 663 492",
-    hours: "Mon–Sat 8:30–17:30",
-    type: "Head Office",
-  },
-  {
-    name: "Main Branch",
-    city: "Addis Ababa",
-    area: "Dembel City Center",
-    phone: "+251 115 500 700",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Piassa Branch",
-    city: "Addis Ababa",
-    area: "Dejach Wube Sefer, In front of Addis Ababa restaurant; 1st floor",
-    phone: "+251 111 23 45 67",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-
-  {
-    name: "Megenagna Branch",
-    city: "Addis Ababa",
-    area: "CMC Road",
-    phone: "+251 116 674 666",
-    hours: "Mon–Fri 8:30–17:30",
-    type: "Branch",
-  },
-  {
-    name: "Bekelobet Branch",
-    city: "Addis Ababa",
-    area: "Lancha Mikwor Plaza Bdg. Ground Flr.",
-    phone: "+251 114 705 473",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Sengatera Branch",
-    city: "Addis Ababa",
-    area: "Sagatera 40/60 Condominium Block 1; 2nd Floor",
-    phone: "+251 112 732 759",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Lebu Branch",
-    city: "Addis Ababa",
-    area: "Lebu mebrat; infont of Zemen Gas Station; 1st floor of Tigust and Aikel Building",
-    phone: "+251 114 625 989",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Gerar Branch",
-    city: "Addis Ababa",
-    area: "Ayer Tena Deblo building , 2nd Floor",
-    phone: "+251 113 694 173",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Summit Branch",
-    city: "Addis Ababa",
-    area: "Around Fiyel bet GN Building 1st floor",
-    phone: "+251 116 701 693",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Ayat Branch",
-    city: "Addis Ababa",
-    area: "Ayat infront of All Mart Supermarket",
-    phone: "+251 116 700 576",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Pastor Branch",
-    city: "Addis Ababa",
-    area: "Tsehai Bridge, next to Adarge School; Ayelech Building, 1st floor",
-    phone: "+251 112 740 298",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Karl Branch",
-    city: "Addis Ababa",
-    area: "Sarbet; Bisrat Gabriel Road; Next to Queens Supermarket ; Boren Building 2nd Floor",
-    phone: "+251 113 837 039",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Bulbula Branch",
-    city: "Addis Ababa",
-    area: "Red soil;Before Jamboro Real Estate,",
-    phone: "+251 114 432 225",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Kality Branch",
-    city: "Addis Ababa",
-    area: "Next to Kality Total Gas Station 1st Flr.",
-    phone: "+251 114 552 490",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Kotebe Branch",
-    city: "Addis Ababa",
-    area: "Kotebe 02 Next to Yerer Building 1st Flr.",
-    phone: "+251 116 734 513",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Gerji Branch",
-    city: "Addis Ababa",
-    area: "Gerji Roba infront of Sunshine Bld",
-    phone: "+251 116 394 694",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Jemo Branch",
-    city: "Addis Ababa",
-    area: "Jamo 1, 67 Mazoriya Densher Bld. 1st Flr.",
-    phone: "+251 114 379 196",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Tafo Branch",
-    city: "Addis Ababa",
-    area: "Next to EthioTelecom CCD Homes.",
-    phone: "+251 116 702 240",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Butajira Branch",
-    city: "Butajira",
-    area: "Butajira; Infront of Ethio telecom; Admas Bogale Building",
-    phone: "",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-  {
-    name: "Hosana Branch",
-    city: "Hosana",
-    area: "Hosanna Main Street, Ambcho Road, in front of Saleme Café",
-    phone: "+251 461 780 717",
-    hours: "Mon–Sat 8:30–17:00",
-    type: "Branch",
-  },
-];
+import { useGetBranchesQuery } from "@/state/api/ApiSlice";
+import { Loader2 } from "lucide-react";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -180,6 +19,7 @@ const fadeUp = {
 
 export default function Branches() {
   const [search, setSearch] = useState("");
+  const { data: branches = [], isLoading } = useGetBranchesQuery();
 
   const filtered = branches.filter(
     (b) =>
@@ -187,6 +27,7 @@ export default function Branches() {
       b.city.toLowerCase().includes(search.toLowerCase()) ||
       b.area.toLowerCase().includes(search.toLowerCase()),
   );
+
 
   return (
     <div className="overflow-x-hidden ">
@@ -228,7 +69,7 @@ export default function Branches() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <div className="grid grid-cols-3 gap-px bg-gray-100">
             {[
-              { value: "22", label: "Total Branches" },
+              { value: isLoading ? "-" : branches.length.toString(), label: "Total Branches" },
               { value: "10+", label: "Cities Covered" },
               { value: "6 days / week", label: "Open Hours" },
             ].map((s) => (
@@ -246,7 +87,12 @@ export default function Branches() {
       {/* Branch list */}
       <section className="py-16 bg-[#f0f3fc]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-24 text-gray-400 flex flex-col items-center">
+              <Loader2 className="w-10 h-10 mb-4 animate-spin text-[#22348A]" />
+              <p>Loading branches...</p>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="text-center py-24 text-gray-400">
               <MapPin className="w-10 h-10 mx-auto mb-4 opacity-20" />
               <p>No branches found for "{search}"</p>

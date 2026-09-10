@@ -84,3 +84,8 @@ export type DocumentChunk = Prisma.DocumentChunkModel
  * 
  */
 export type Account = Prisma.AccountModel
+/**
+ * Model Branch
+ * 
+ */
+export type Branch = Prisma.BranchModel

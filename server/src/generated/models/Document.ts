@@ -31,6 +31,7 @@ export type DocumentMinAggregateOutputType = {
   source: string | null
   sourceType: string | null
   contentType: string | null
+  contentHash: string | null
   status: $Enums.DocumentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -43,6 +44,7 @@ export type DocumentMaxAggregateOutputType = {
   source: string | null
   sourceType: string | null
   contentType: string | null
+  contentHash: string | null
   status: $Enums.DocumentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +57,7 @@ export type DocumentCountAggregateOutputType = {
   source: number
   sourceType: number
   contentType: number
+  contentHash: number
   status: number
   createdAt: number
   updatedAt: number
@@ -69,6 +72,7 @@ export type DocumentMinAggregateInputType = {
   source?: true
   sourceType?: true
   contentType?: true
+  contentHash?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -81,6 +85,7 @@ export type DocumentMaxAggregateInputType = {
   source?: true
   sourceType?: true
   contentType?: true
+  contentHash?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -93,6 +98,7 @@ export type DocumentCountAggregateInputType = {
   source?: true
   sourceType?: true
   contentType?: true
+  contentHash?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -178,6 +184,7 @@ export type DocumentGroupByOutputType = {
   source: string | null
   sourceType: string | null
   contentType: string | null
+  contentHash: string | null
   status: $Enums.DocumentStatus
   createdAt: Date
   updatedAt: Date
@@ -211,6 +218,7 @@ export type DocumentWhereInput = {
   source?: Prisma.StringNullableFilter<"Document"> | string | null
   sourceType?: Prisma.StringNullableFilter<"Document"> | string | null
   contentType?: Prisma.StringNullableFilter<"Document"> | string | null
+  contentHash?: Prisma.StringNullableFilter<"Document"> | string | null
   status?: Prisma.EnumDocumentStatusFilter<"Document"> | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
@@ -224,6 +232,7 @@ export type DocumentOrderByWithRelationInput = {
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceType?: Prisma.SortOrderInput | Prisma.SortOrder
   contentType?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -240,6 +249,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   source?: Prisma.StringNullableFilter<"Document"> | string | null
   sourceType?: Prisma.StringNullableFilter<"Document"> | string | null
   contentType?: Prisma.StringNullableFilter<"Document"> | string | null
+  contentHash?: Prisma.StringNullableFilter<"Document"> | string | null
   status?: Prisma.EnumDocumentStatusFilter<"Document"> | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
@@ -253,6 +263,7 @@ export type DocumentOrderByWithAggregationInput = {
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceType?: Prisma.SortOrderInput | Prisma.SortOrder
   contentType?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -271,6 +282,7 @@ export type DocumentScalarWhereWithAggregatesInput = {
   source?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   sourceType?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   contentType?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
+  contentHash?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   status?: Prisma.EnumDocumentStatusWithAggregatesFilter<"Document"> | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
@@ -283,6 +295,7 @@ export type DocumentCreateInput = {
   source?: string | null
   sourceType?: string | null
   contentType?: string | null
+  contentHash?: string | null
   status?: $Enums.DocumentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -296,6 +309,7 @@ export type DocumentUncheckedCreateInput = {
   source?: string | null
   sourceType?: string | null
   contentType?: string | null
+  contentHash?: string | null
   status?: $Enums.DocumentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -309,6 +323,7 @@ export type DocumentUpdateInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -322,6 +337,7 @@ export type DocumentUncheckedUpdateInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -335,6 +351,7 @@ export type DocumentCreateManyInput = {
   source?: string | null
   sourceType?: string | null
   contentType?: string | null
+  contentHash?: string | null
   status?: $Enums.DocumentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -347,6 +364,7 @@ export type DocumentUpdateManyMutationInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,6 +377,7 @@ export type DocumentUncheckedUpdateManyInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -371,6 +390,7 @@ export type DocumentCountOrderByAggregateInput = {
   source?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  contentHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -383,6 +403,7 @@ export type DocumentMaxOrderByAggregateInput = {
   source?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  contentHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -395,6 +416,7 @@ export type DocumentMinOrderByAggregateInput = {
   source?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
+  contentHash?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -424,6 +446,7 @@ export type DocumentCreateWithoutChunksInput = {
   source?: string | null
   sourceType?: string | null
   contentType?: string | null
+  contentHash?: string | null
   status?: $Enums.DocumentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -436,6 +459,7 @@ export type DocumentUncheckedCreateWithoutChunksInput = {
   source?: string | null
   sourceType?: string | null
   contentType?: string | null
+  contentHash?: string | null
   status?: $Enums.DocumentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -464,6 +488,7 @@ export type DocumentUpdateWithoutChunksInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,6 +501,7 @@ export type DocumentUncheckedUpdateWithoutChunksInput = {
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDocumentStatusFieldUpdateOperationsInput | $Enums.DocumentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -519,6 +545,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   source?: boolean
   sourceType?: boolean
   contentType?: boolean
+  contentHash?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -533,6 +560,7 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   source?: boolean
   sourceType?: boolean
   contentType?: boolean
+  contentHash?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -545,6 +573,7 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   source?: boolean
   sourceType?: boolean
   contentType?: boolean
+  contentHash?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -557,12 +586,13 @@ export type DocumentSelectScalar = {
   source?: boolean
   sourceType?: boolean
   contentType?: boolean
+  contentHash?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "fileName" | "source" | "sourceType" | "contentType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "fileName" | "source" | "sourceType" | "contentType" | "contentHash" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chunks?: boolean | Prisma.Document$chunksArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
@@ -582,6 +612,7 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     source: string | null
     sourceType: string | null
     contentType: string | null
+    contentHash: string | null
     status: $Enums.DocumentStatus
     createdAt: Date
     updatedAt: Date
@@ -1015,6 +1046,7 @@ export interface DocumentFieldRefs {
   readonly source: Prisma.FieldRef<"Document", 'String'>
   readonly sourceType: Prisma.FieldRef<"Document", 'String'>
   readonly contentType: Prisma.FieldRef<"Document", 'String'>
+  readonly contentHash: Prisma.FieldRef<"Document", 'String'>
   readonly status: Prisma.FieldRef<"Document", 'DocumentStatus'>
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>

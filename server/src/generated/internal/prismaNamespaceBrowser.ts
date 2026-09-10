@@ -59,7 +59,8 @@ export const ModelName = {
   Message: 'Message',
   Document: 'Document',
   DocumentChunk: 'DocumentChunk',
-  Account: 'Account'
+  Account: 'Account',
+  Branch: 'Branch'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -171,6 +172,7 @@ export const DocumentScalarFieldEnum = {
   source: 'source',
   sourceType: 'sourceType',
   contentType: 'contentType',
+  contentHash: 'contentHash',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -209,6 +211,21 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const BranchScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  city: 'city',
+  area: 'area',
+  phone: 'phone',
+  hours: 'hours',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
 
 
 export const SortOrder = {

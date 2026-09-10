@@ -43,6 +43,18 @@ export interface Career {
   updatedAt: string;
 }
 
+export interface Branch {
+  id: string;
+  name: string;
+  city: string;
+  area: string;
+  phone: string;
+  hours: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Application {
   id: string;
   applicationId: string;
@@ -105,7 +117,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQuery,
-  tagTypes: ["News", "Career", "Auth", "User", "Account"],
+  tagTypes: ["News", "Career", "Auth", "User", "Account", "Branch"],
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, { email: string; password: string }>({
       query: (credentials) => ({
@@ -335,6 +347,45 @@ export const apiSlice = createApi({
       query: () => "/open-account/stats",
       providesTags: [{ type: "Account", id: "STATS" }],
     }),
+
+    // Branch Endpoints
+    getBranches: builder.query<Branch[], void>({
+      query: () => "/branch",
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Branch" as const, id })),
+              { type: "Branch", id: "LIST" },
+            ]
+          : [{ type: "Branch", id: "LIST" }],
+    }),
+    getBranchById: builder.query<Branch, string>({
+      query: (id) => `/branch/${id}`,
+      providesTags: (result, error, id) => [{ type: "Branch", id }],
+    }),
+    createBranch: builder.mutation<Branch, Partial<Branch>>({
+      query: (body) => ({
+        url: "/branch",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Branch", id: "LIST" }],
+    }),
+    updateBranch: builder.mutation<Branch, { id: string; body: Partial<Branch> }>({
+      query: ({ id, body }) => ({
+        url: `/branch/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Branch", id }, { type: "Branch", id: "LIST" }],
+    }),
+    deleteBranch: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/branch/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Branch", id }, { type: "Branch", id: "LIST" }],
+    }),
   }),
 });
 
@@ -368,4 +419,9 @@ export const {
   useUpdateOpenAccountMutation,
   useDeleteOpenAccountMutation,
   useGetOpenAccountStatsQuery,
+  useGetBranchesQuery,
+  useGetBranchByIdQuery,
+  useCreateBranchMutation,
+  useUpdateBranchMutation,
+  useDeleteBranchMutation,
 } = apiSlice;

@@ -135,6 +135,7 @@ model Document {
   source      String?
   sourceType  String?
   contentType String?
+  contentHash String?
   status      DocumentStatus @default(PROCESSING)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -179,4 +180,18 @@ model Account {
   updatedAt     DateTime      @updatedAt
 
   @@map("account")
+}
+
+model Branch {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  city      String
+  area      String
+  phone     String
+  hours     String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("branches")
 }
