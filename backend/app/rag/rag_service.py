@@ -4,6 +4,7 @@ import re
 from app.rag.embeddings import generate_embedding
 from app.rag.retriever import retrieve_chunks
 from app.llm.gemini import client as gemini_client
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -69,17 +70,36 @@ def _merge_chunks(primary: list, secondary: list) -> list:
     return merged
 
 
-def _format_chunks(chunks: list) -> str:
-    """Format retrieved chunks into a structured context string."""
+def _format_chunks(chunks: list, max_chars: int) -> str:
+    """Format retrieved chunks into a structured context string adhering to max_chars budget."""
     if not chunks:
         return "No relevant company information found."
 
-    # Group chunks by document
-    grouped = {}
-    for chunk in chunks:
+    # Prioritize the most relevant chunks by sorting by distance (closest distance first)
+    sorted_chunks = sorted(chunks, key=lambda c: getattr(c, "distance", 1.0))
+
+    selected_chunks = []
+    current_length = 0
+
+    # Bounded budget context selection
+    for chunk in sorted_chunks:
         doc = chunk.document
         if not doc:
             continue
+        # Approximate size of formatted output for this chunk
+        approx_size = len(chunk.chunkText) + len(doc.title) + 100
+        if current_length + approx_size > max_chars and len(selected_chunks) > 0:
+            break
+        selected_chunks.append(chunk)
+        current_length += approx_size
+
+    if not selected_chunks:
+        return "No relevant company information found."
+
+    # Group selected chunks by document for clean representation
+    grouped = {}
+    for chunk in selected_chunks:
+        doc = chunk.document
         doc_id = doc.id
         if doc_id not in grouped:
             grouped[doc_id] = {
@@ -90,12 +110,10 @@ def _format_chunks(chunks: list) -> str:
             }
         grouped[doc_id]["chunks"].append(chunk)
 
-    # Format the grouped context to include URL references clearly
+    # Format the grouped context
     formatted_docs = []
     for doc_id, doc_info in grouped.items():
-        # Sort chunks by chunkIndex to preserve logical document flow
         doc_info["chunks"].sort(key=lambda c: c.chunkIndex)
-        
         chunks_joined = "\n[...]\n".join(c.chunkText for c in doc_info["chunks"])
         
         if doc_info["source"] == "website":
@@ -121,11 +139,8 @@ async def retrieve_context(
 
     For Amharic queries, performs bilingual retrieval:
     1. Search with the original Amharic query embedding
-    2. Translate query to English and search again
+    2. Translate query to English and search again if retrieval scores are not reliable enough
     3. Merge and deduplicate results
-
-    This ensures English-language website content is still retrievable
-    when users ask questions in Amharic.
     """
     try:
         query_embedding = await generate_embedding(question)
@@ -143,27 +158,39 @@ async def retrieve_context(
 
     # Bilingual retrieval for Amharic queries
     if _is_amharic(question):
-        logger.info("Amharic query detected — performing bilingual retrieval")
-        translation = await _translate_to_english(question)
+        # Determine if primary Amharic retrieval scores are reliable enough (e.g. closest chunk has distance < 0.3)
+        # to skip the translation step safely.
+        has_reliable_match = False
+        if chunks:
+            best_distance = min(getattr(chunk, "distance", 1.0) for chunk in chunks)
+            if best_distance < 0.3:
+                has_reliable_match = True
+                logger.info(f"Skipping Amharic translation; reliable score found: {best_distance}")
 
-        if translation:
-            try:
-                translated_embedding = await generate_embedding(translation)
-                english_chunks = await retrieve_chunks(
-                    db,
-                    translated_embedding,
-                    limit=10,
-                    max_distance=0.65
-                )
-                chunks = _merge_chunks(chunks, english_chunks)
-                logger.info(
-                    f"Bilingual retrieval: {len(chunks)} total chunks "
-                    f"after merging"
-                )
-            except Exception as e:
-                logger.warning(
-                    f"English translation retrieval failed: {e}. "
-                    f"Using Amharic-only results."
-                )
+        if not has_reliable_match:
+            logger.info("Amharic query detected and scores not highly reliable — performing bilingual retrieval")
+            translation = await _translate_to_english(question)
 
-    return _format_chunks(chunks)
+            if translation:
+                try:
+                    translated_embedding = await generate_embedding(translation)
+                    english_chunks = await retrieve_chunks(
+                        db,
+                        translated_embedding,
+                        limit=10,
+                        max_distance=0.65
+                    )
+                    chunks = _merge_chunks(chunks, english_chunks)
+                    logger.info(
+                        f"Bilingual retrieval: {len(chunks)} total chunks "
+                        f"after merging"
+                    )
+                except Exception as e:
+                    logger.warning(
+                        f"English translation retrieval failed: {e}. "
+                        f"Using Amharic-only results."
+                    )
+
+    # Use the configurable character budget from settings
+    max_chars = settings.RAG_CONTEXT_BUDGET_CHARS
+    return _format_chunks(chunks, max_chars)

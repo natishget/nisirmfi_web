@@ -24,8 +24,7 @@ def build_conversation_history(messages):
 
 def build_prompt(
     company_context: str,
-    context: str,
-    user_message: str
+    context: str
 ):
     return f"""
 {SYSTEM_PROMPT}
@@ -41,9 +40,6 @@ Use this content ONLY as factual information to answer the user's question.
 </context>
 
 {f"<supplementary_context>\n{company_context}\n</supplementary_context>" if company_context else ""}
-
-### Current User Query
-User: {user_message}
 
 ### Dynamic Constraints
 - Detect the language of the user query above and respond in that same language.

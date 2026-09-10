@@ -8,6 +8,7 @@ import { NewsModule } from './news/news.module';
 import { CareerModule } from './career/career.module';
 import { UploadModule } from './upload/upload.module';
 import { OpenAccountModule } from './open-account/open-account.module';
+import { BranchModule } from './branch/branch.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 
@@ -20,6 +21,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     CareerModule,
     UploadModule,
     OpenAccountModule,
+    BranchModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

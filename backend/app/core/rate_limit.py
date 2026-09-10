@@ -1,31 +1,34 @@
-import datetime
+import time
 from collections import defaultdict
+import threading
 
-class DailyRateLimiter:
-    def __init__(self, limit: int):
+class RollingRateLimiter:
+    def __init__(self, limit: int, window_seconds: int = 86400):
         """
-        limit: Maximum number of requests allowed per day
+        limit: Maximum number of requests allowed per window
+        window_seconds: Window duration in seconds (default: 24 hours / 86400s)
         """
         self.limit = limit
-        self.requests = defaultdict(int)
-        self.current_day = datetime.date.today()
+        self.window_seconds = window_seconds
+        self.requests = defaultdict(list)
+        self._lock = threading.Lock()
 
     def is_allowed(self, key: str) -> bool:
-        today = datetime.date.today()
+        now = time.time()
+        cutoff = now - self.window_seconds
         
-        # Reset the counts if we are on a new day
-        if today != self.current_day:
-            self.requests.clear()
-            self.current_day = today
-        
-        # Check if the limit has been reached
-        if self.requests[key] < self.limit:
-            self.requests[key] += 1
-            return True
+        with self._lock:
+            # Filter out timestamps older than the cutoff
+            self.requests[key] = [t for t in self.requests[key] if t > cutoff]
             
-        return False
+            # Check if the limit has been reached
+            if len(self.requests[key]) < self.limit:
+                self.requests[key].append(now)
+                return True
+                
+            return False
 
-# Global instances for daily rate limiting
-# Allow 15 requests per day for both web and telegram
-web_rate_limiter = DailyRateLimiter(limit=15)
-telegram_rate_limiter = DailyRateLimiter(limit=15)
+# Global instances for rolling rate limiting
+# Allow 10 requests per rolling 24 hours for both web and telegram
+web_rate_limiter = RollingRateLimiter(limit=10)
+telegram_rate_limiter = RollingRateLimiter(limit=10)
