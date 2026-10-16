@@ -10,8 +10,19 @@ import { PassportModule } from '@nestjs/passport';
 
 import { JwtModule } from '@nestjs/jwt';
 
+import { ThrottlerModule } from '@nestjs/throttler';
+
+
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        name: 'login',
+        // ttl: 15 * 60 * 1000,
+        ttl: 15,
+        limit: 5,
+      },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -25,4 +36,4 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
 })
-export class AuthModule {}
+export class AuthModule { }

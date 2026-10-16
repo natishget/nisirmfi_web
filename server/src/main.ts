@@ -36,10 +36,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
 
-  const allowedOrigin = (process.env.ALLOWED_ORIGIN ?? 'http://localhost:3000')
+  const allowedOrigin = (process.env.ALLOWED_ORIGIN ?? 'http://locahost:3000')
     .split(',')
     .map((origin) => normalizeOrigin(origin))
     .filter(Boolean);
+
 
   const allowedOriginSet = new Set(allowedOrigin);
   const allowedHostSet = new Set(
