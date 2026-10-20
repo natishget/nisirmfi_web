@@ -15,12 +15,12 @@ Customers must:
 ## Deposit Limits
 
 - Minimum Deposit: 5 ETB
-- Maximum Deposit: 100,000 ETB
+- Maximum Deposit: Unlimited
 
 ## Interest
 
 - Interest is calculated based on minimum balance.
-- Interest is paid monthly.
+- Interest is paid daily on savings.
 - Applicable taxes may be deducted according to Ethiopian regulations.
 
 ## Data Privacy and Disclosure

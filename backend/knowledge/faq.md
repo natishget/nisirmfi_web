@@ -4,7 +4,7 @@
 
 The following documents may be required:
 
-1. Valid national identification card of borrower and guarantor.
+1. Valid national identification card (Both Fayda ID and Kebele ID) of borrower and guarantor.
 2. Business license and registration documents.
 3. TIN certificate.
 4. Bank statements showing income and expenses.
@@ -14,7 +14,7 @@ The following documents may be required:
 
 ## What collateral can be used?
 
-Depending on the loan type:
+A Car or A house can be used as a collateral.
 
 ### Vehicle Collateral
 
@@ -49,7 +49,7 @@ Individuals, entrepreneurs, micro businesses, small businesses, and medium-sized
 
 ## Does Nisir offer savings accounts?
 
-Yes. Nisir offers multiple savings products including regular savings, fixed deposits, women savings, child savings, elder savings, disability savings, and digital savings.
+Yes. Nisir offers multiple savings products including Regular savings, Fixed time deposit, Women savings (Alem), Child savings (Maleda), Elderly savings (Efoy), Disability savings (Yichalal), and Digital savings (Nisir Kefeta).
 
 ## How can I contact Nisir?
 
@@ -67,4 +67,4 @@ Email:
 - info@nisirmfi.com
 
 Address:
-Nisir Building, European Union Street, Addis Ababa, Ethiopia.
+Nisir Building, Rwanda to Atlas road, Addis Ababa, Ethiopia.

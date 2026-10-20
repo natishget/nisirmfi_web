@@ -7,29 +7,26 @@ Nisir Microfinance Institution Share Company is an Ethiopian financial instituti
 Nisir focuses on serving Micro, Small, and Medium Enterprises (MSMEs), often referred to as "the missing middle," while also providing financial services to individuals and businesses across Ethiopia.
 
 ## Vision
-
-To become the financial services partner of choice for MSMEs and others in Ethiopia by 2030.
+To be beacon of swift and seamless financial solutions for the underserved individuals and SMEs.
 
 ## Mission
 
-To provide trusted, win-win, and need-based financial solutions to customers and sustainable value to stakeholders through a technology-enabled and empowered workforce.
+We are committed to provide trusted, win-win and need-based financial solutions to customers and sustainable value to stakeholders through people centered & intelligent system.
 
 ## Core Values
 
-- Integrity
-- Ambition
-- Collaboration
-- Customer-Centricity
-- Continuous Improvement
-- Equity
+We live our promises to customers.
+We are a member of the one 'Nisir' family.
+We continuously learn, evolve, and adapt.
+We are committed to responsible finance | We finance sustainable progress.
 
 ## Key Facts
 
 - Established: 2014
-- Customers: 20,000+
-- Employees: 200+
-- Branches: 20+
-- Years of Operation: 10+
+- Customers: 45,000+
+- Employees: 250+
+- Branches: 25+
+- Years of Operation: 12+
 
 ## What We Do
 
@@ -44,7 +41,7 @@ Nisir provides:
 ## Head Office
 
 Nisir Building,
-European Union Street,
+Rwanda to Atlas Road,
 Addis Ababa, Ethiopia
 
 ### Contact
